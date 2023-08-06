@@ -74,7 +74,7 @@ export default function Sign_Up({ navigation }) {
     formData.append('dateOfBirth', DOB)
     formData.append('userType', option)
     formData.append('phoneNumber', phoneNum)
-    axios.post('https://zigwa.cleverapps.io/register', formData, { headers: { 'Content-Type': 'multipart/form-data', } }).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
+    axios.post('https://zigwa.cleverapps.io/register', formData, { headers: { 'Content-Type': 'multipart/form-data'} }).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
   }
 
   return (
@@ -92,7 +92,6 @@ export default function Sign_Up({ navigation }) {
         <Picker.Item value='collector' label='collector' ></Picker.Item>
         <Picker.Item value='scrapDealer' label='scrap dealer' ></Picker.Item>
         <Picker.Item value='citizen' label='citizen' ></Picker.Item>
-
       </Picker>
       <Button title='sign up' onPress={handleSignInButton} />
       <Button title='sign in instead' onPress={() => navigation.navigate('Sign_In')} />

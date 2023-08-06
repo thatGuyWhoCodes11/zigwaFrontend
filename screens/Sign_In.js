@@ -13,10 +13,25 @@ export default function Sign_In({ navigation }) {
             setPassword(text)
     }
     function sendCredits() {
-        const formData = new FormData
+        const formData = new FormData()
         formData.append('username', username)
         formData.append('password', password)
-        axios.post('https://zigwa.cleverapps.io/login', formData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then((res) => console.log(res.data)).catch((err) => console.error(err.message))
+        axios.post('https://zigwa.cleverapps.io/login', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => { 
+            navigation.navigate('Citizen')
+            if(res.data.errorCode===0){
+                switch(res.data.userData.userType){
+                    case 'citizen':
+                        navigation.navigate('Citizen',{params:{damn:'datass'}})
+                        break;
+                    case 'scrapDealer':
+                        navigation.navigate('Scrap_Dealer')
+                        break;
+                    case 'Collector':
+                        navigation.navigate('Collector')
+                        break;
+                }
+            }
+         }).catch((err) => { console.log(err) })
     }
     return (
         <View>
