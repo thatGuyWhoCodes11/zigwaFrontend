@@ -38,6 +38,7 @@ export default function Sign_In({ navigation }) {
     }
     return (
         <View>
+            
             <TextInput placeholder="username" onChangeText={(text) => handleText(text, refUsername)} ref={refUsername} />
             <TextInput placeholder="password" secureTextEntry onChangeText={(text) => handleText(text, refPassword)} ref={refPassword} />
             <Button title="sign in" onPress={sendCredits} />

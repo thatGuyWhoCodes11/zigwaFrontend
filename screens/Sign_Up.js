@@ -4,6 +4,8 @@ import { Picker } from '@react-native-picker/picker';
 import { useState, useRef } from 'react';
 import Modal from "react-native-modal";
 import axios from 'axios'
+import { useFonts } from 'expo-font'
+import AppLoading from "expo-app-loading";
 
 export default function Sign_Up({ navigation }) {
   const [name, setName] = useState('')
@@ -73,27 +75,62 @@ export default function Sign_Up({ navigation }) {
     formData.append('dateOfBirth', DOB)
     formData.append('userType', option)
     formData.append('phoneNumber', phoneNum)
-    axios.post('https://zigwa.cleverapps.io/register', formData, { headers: { 'Content-Type': 'multipart/form-data'} }).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
+    axios.post('https://zigwa.cleverapps.io/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
+  }
+
+  let [fontsLoaded] = useFonts({
+    'bebas': require('../assets/fonts/BebasNeue-Regular.ttf')
+  });
+  if (!fontsLoaded) {
+    return <AppLoading />;
   }
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require("../images/trashcan.jpg")} />
-      <Text style={styles.text}>welcome to zigwa</Text>
-      <TextInput ref={refName} onChangeText={(text) => handleTextChange(text, refName)} style={styles.TextInput} placeholder='name'></TextInput>
-      <TextInput ref={refUsername} onChangeText={(text) => handleTextChange(text, refUsername)} style={styles.TextInput} placeholder='username'></TextInput>
-      <TextInput ref={refPassword} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPassword)} style={styles.TextInput} placeholder='password'></TextInput>
-      <TextInput ref={refPasswordRep} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPasswordRep)} style={styles.TextInput} placeholder='repeat password'></TextInput>
-      <TextInput ref={refDOB} onChangeText={(text) => handleTextChange(text, refDOB)} style={styles.TextInput} placeholder='date of birth: yyyy/mm/dd'></TextInput>
-      <TextInput ref={refPhoneNum} onChangeText={(text) => handleTextChange(text, refPhoneNum)} style={styles.TextInput} placeholder='phone number'></TextInput>
-      <Picker onValueChange={(item) => { setOption(item) }} selectedValue={option} style={{fontStyle:'italic'}}>
-        <Picker.Item value={null} label='select your role...'></Picker.Item>
-        <Picker.Item value='collector' label='collector' ></Picker.Item>
-        <Picker.Item value='scrapDealer' label='scrap dealer' ></Picker.Item>
-        <Picker.Item value='citizen' label='citizen' ></Picker.Item>
-      </Picker>
-      <Button title='sign up' onPress={handleSignInButton} />
-      <Button title='sign in instead' onPress={() => navigation.navigate('Sign_In')} />
+      <Image style={styles.image} source={require("../images/wel.png")} />
+      <View style={styles.responsibleforbox}>
+        <View style={styles.boxforall}>
+          <View>
+            <Text style={{ fontFamily: 'bebas', fontSize: 30 }}>Sign Up</Text>
+          </View>
+          <View style={styles.inp}>
+            <View style={styles.boxie}>
+              <TextInput ref={refName} onChangeText={(text) => handleTextChange(text, refName)} style={styles.TextInput} placeholder='Name'></TextInput>
+            </View>
+            <View style={styles.boxie}>
+              <TextInput ref={refUsername} onChangeText={(text) => handleTextChange(text, refUsername)} style={styles.TextInput} placeholder='UserName'></TextInput>
+            </View>
+            <View style={styles.boxie}>
+              <TextInput ref={refPassword} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPassword)} style={styles.TextInput} placeholder='Password'></TextInput>
+            </View>
+            <View style={styles.boxie}>
+              <TextInput ref={refPasswordRep} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPasswordRep)} style={styles.TextInput} placeholder='Repeat Password'></TextInput>
+            </View>
+            <View style={styles.boxie}>
+              <TextInput ref={refDOB} onChangeText={(text) => handleTextChange(text, refDOB)} style={styles.TextInput} placeholder='Date Of Birth: YYYY/MM/DD'></TextInput>
+            </View>
+            <View style={styles.boxie}>
+              <TextInput ref={refPhoneNum} onChangeText={(text) => handleTextChange(text, refPhoneNum)} style={styles.TextInput} placeholder='Phone Number'></TextInput>
+            </View>
+
+
+          </View>
+          <View>
+            <Picker onValueChange={(item) => { setOption(item) }} selectedValue={option}>
+              <Picker.Item value={null} label='select your role...' ></Picker.Item>
+              <Picker.Item value='collector' label='collector' ></Picker.Item>
+              <Picker.Item value='scrapDealer' label='scrap dealer' ></Picker.Item>
+              <Picker.Item value='citizen' label='citizen' ></Picker.Item>
+            </Picker>
+          </View>
+          <View style={styles.button}>
+            <Button color='#5e17eb' title='sign up' onPress={handleSignInButton} />
+          </View>
+          <View style={styles.button}>
+            <Button color='#5e17eb' title='sign in instead' onPress={() => navigation.navigate('Sign_In')} />
+          </View>
+        </View>
+      </View>
       <Modal isVisible={modal}>
         <View style={{ alignItems: 'center', backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
           <Text style={{ marginBottom: 10 }}>error, {reason}</Text>
@@ -106,23 +143,51 @@ export default function Sign_Up({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    backgroundColor: "purple",
+    bottom: -20
+  },
+  button: {
+    padding: 10
+  },
+  boxie: {
+    padding: 5
+  },
+  inp: {
+    padding: 10
+  },
+  responsibleforbox: {
+    alignItems: 'center'
+
+  },
+  boxforall: {
+    backgroundColor: 'white',
+    elevation: 20,
+    padding: 20,
+    bottom: 140,
+    width: 350,
+    borderRadius: 15,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     alignItems: 'stretch',
     justifyContent: 'center',
     borderColor: "black",
-    borderWidth: 2
+    borderWidth: 2,
   },
   TextInput: {
     borderWidth: 1,
-    padding: 1,
-    paddingHorizontal: 3
+    padding: 2,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    fontFamily: 'bebas'
   },
   image: {
-    height: 250,
-    width: 300,
-    alignSelf: 'center'
+    height: '50%',
+    width: '100%',
+    alignSelf: 'center',
+    top: 70
   },
   text: {
     fontSize: 30,
