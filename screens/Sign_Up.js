@@ -35,7 +35,6 @@ export default function Sign_Up({ navigation }) {
       setDOB(text)
     else if (inpRef === refPhoneNum)
       setPhoneNum(text)
-    console.log(text)
   }
   function handleSignInButton() {
     checkDate(DOB)
@@ -87,8 +86,8 @@ export default function Sign_Up({ navigation }) {
       <TextInput ref={refPasswordRep} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPasswordRep)} style={styles.TextInput} placeholder='repeat password'></TextInput>
       <TextInput ref={refDOB} onChangeText={(text) => handleTextChange(text, refDOB)} style={styles.TextInput} placeholder='date of birth: yyyy/mm/dd'></TextInput>
       <TextInput ref={refPhoneNum} onChangeText={(text) => handleTextChange(text, refPhoneNum)} style={styles.TextInput} placeholder='phone number'></TextInput>
-      <Picker onValueChange={(item) => { setOption(item) }} selectedValue={option}>
-        <Picker.Item value={null} label='select your role...' ></Picker.Item>
+      <Picker onValueChange={(item) => { setOption(item) }} selectedValue={option} style={{fontStyle:'italic'}}>
+        <Picker.Item value={null} label='select your role...'></Picker.Item>
         <Picker.Item value='collector' label='collector' ></Picker.Item>
         <Picker.Item value='scrapDealer' label='scrap dealer' ></Picker.Item>
         <Picker.Item value='citizen' label='citizen' ></Picker.Item>

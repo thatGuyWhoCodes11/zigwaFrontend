@@ -12,9 +12,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <stack.Navigator >
-        <stack.Screen name='Sign_Up' component={Sign_Up} options={{title:"prank em john"}} />
+        <stack.Screen name='Sign_Up' component={Sign_Up} options={{title:"", headerTransparent:true}} />
+        <stack.Screen name='Citizen' component={Citizen} />
         <stack.Screen name='Sign_In' component={Sign_In} />
-        <stack.Screen name='Citizen' component={Citizen}  />
       </stack.Navigator>
     </NavigationContainer>
   );

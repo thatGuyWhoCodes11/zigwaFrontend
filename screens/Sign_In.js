@@ -16,12 +16,11 @@ export default function Sign_In({ navigation }) {
         const formData = new FormData()
         formData.append('username', username)
         formData.append('password', password)
-        axios.post('https://zigwa.cleverapps.io/login', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => { 
-            navigation.navigate('Citizen')
-            if(res.data.errorCode===0){
-                switch(res.data.userData.userType){
+        axios.post('https://zigwa.cleverapps.io/login', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
+            if (res.data.errorCode == 0) {
+                switch (res.data.userData.userType) {
                     case 'citizen':
-                        navigation.navigate('Citizen',{params:{damn:'datass'}})
+                        navigation.navigate('Citizen', { params: res.data.userData })
                         break;
                     case 'scrapDealer':
                         navigation.navigate('Scrap_Dealer')
@@ -29,9 +28,13 @@ export default function Sign_In({ navigation }) {
                     case 'Collector':
                         navigation.navigate('Collector')
                         break;
+                    default:
+                        console.log("no such thing is proccessed")
                 }
+            } else {
+                console.log(res.data)
             }
-         }).catch((err) => { console.log(err) })
+        }).catch((err) => { console.log(err) })
     }
     return (
         <View>
