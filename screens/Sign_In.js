@@ -22,13 +22,13 @@ export default function Sign_In({ navigation }) {
             if (res.data.errorCode == 0) {
                 switch (res.data.userData.userType) {
                     case 'citizen':
-                        navigation.navigate('Citizen', { params: res.data.userData })
+                        navigation.navigate('CitizenDrawer', { params: res.data.userData })
                         break;
                     case 'scrapDealer':
-                        navigation.navigate('Scrap_Dealer')
+                        navigation.navigate('scrapDealerDrawer')
                         break;
                     case 'Collector':
-                        navigation.navigate('Collector')
+                        navigation.navigate('collectorDrawer')
                         break;
                     default:
                         console.log("no such thing is proccessed")
