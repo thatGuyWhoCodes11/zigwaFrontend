@@ -14,7 +14,7 @@ export default function App() {
       <stack.Navigator >
         <stack.Screen name='Sign_Up' component={Sign_Up} options={{title:"", headerTransparent:true}} />
         <stack.Screen name='Citizen' component={Citizen} />
-        <stack.Screen name='Sign_In' component={Sign_In} />
+        <stack.Screen name='Sign_In' component={Sign_In} options={{title:"", headerTransparent:true}} />
       </stack.Navigator>
     </NavigationContainer>
   );

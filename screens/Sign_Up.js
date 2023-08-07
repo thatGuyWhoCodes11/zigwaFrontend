@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Image, ImageBackground } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useState, useRef } from 'react';
 import Modal from "react-native-modal";
@@ -86,6 +86,7 @@ export default function Sign_Up({ navigation }) {
   }
 
   return (
+  
     <View style={styles.container}>
       <Image style={styles.image} source={require("../images/wel.png")} />
       <View style={styles.responsibleforbox}>
@@ -147,6 +148,14 @@ const styles = StyleSheet.create({
     backgroundColor: "purple",
     bottom: -20
   },
+
+  coverr: {
+    height:1000,
+    top:30
+      
+  },
+
+
   button: {
     padding: 10
   },

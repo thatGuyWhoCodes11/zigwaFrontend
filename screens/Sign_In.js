@@ -1,6 +1,8 @@
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button, TextInput, StyleSheet, ImageBackground } from "react-native";
 import { useState, useRef } from "react";
 import axios from "axios";
+import { useFonts } from 'expo-font'
+import AppLoading from "expo-app-loading";
 export default function Sign_In({ navigation }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -36,13 +38,66 @@ export default function Sign_In({ navigation }) {
             }
         }).catch((err) => { console.log(err) })
     }
+
+    let [fontsLoaded] = useFonts({
+        'bebas': require('../assets/fonts/BebasNeue-Regular.ttf')
+      });
+      if (!fontsLoaded) {
+        return <AppLoading />;
+      }
+
     return (
-        <View>
+        <ImageBackground style={styles.cover} source={require('../images/welb.jpeg')}>
+        <View style={styles.all}>
             
-            <TextInput placeholder="username" onChangeText={(text) => handleText(text, refUsername)} ref={refUsername} />
-            <TextInput placeholder="password" secureTextEntry onChangeText={(text) => handleText(text, refPassword)} ref={refPassword} />
-            <Button title="sign in" onPress={sendCredits} />
-            <Button title="sign up instead" onPress={() => navigation.goBack()} />
+              <View style={styles.box}>
+                  <View>
+                      <Text style={{fontFamily:'bebas',fontSize:30}}>Welcome back!</Text>
+                  </View>
+                <View style={{padding:10}}>
+                  <TextInput style={{borderRadius:5,fontFamily:'bebas',borderWidth:.5,padding:5}}placeholder="Username" onChangeText={(text) => handleText(text, refUsername)} ref={refUsername} />
+                </View>
+                <View style={{padding:10}}> 
+                  <TextInput style={{borderRadius:5,fontFamily:'bebas',borderWidth:.5,padding:5}} placeholder="Password" secureTextEntry onChangeText={(text) => handleText(text, refPassword)} ref={refPassword} />
+                </View>
+                <View style={{padding:10}}>
+                  <Button color='#5e17eb' title="sign in" onPress={sendCredits} />
+                </View>
+                <View style={{padding:10}}>
+                  <Button color='#5e17eb' title="sign up instead" onPress={() => navigation.goBack()} />
+                </View>
+              
+              
+            </View>
+
+            
+
+
+
         </View>
+        </ImageBackground>
     )
 }
+
+const styles = StyleSheet.create({
+    box: {
+        backgroundColor: 'white',
+        elevation: 20,
+        padding: 20,
+        top:225,
+        borderRadius: 15,
+        width:350,
+        alignContent:'center',
+        fontFamily:'bebas'
+    },
+
+    all: {
+        alignItems:'center',
+    },
+    
+    cover: {
+        height:1000,
+        top:30
+        
+    }
+})
