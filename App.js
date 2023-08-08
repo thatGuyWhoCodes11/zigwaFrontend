@@ -27,5 +27,3 @@ const styles = StyleSheet.create({
   }
 
 });
-//TO DO make sure to make a seperate folder for each role inside of screens, due to how navigations work, you will have to make nested ones, stackNav that leads to drawerNav
-//each role will have their own drawer navigator, i hope i don't forget this
