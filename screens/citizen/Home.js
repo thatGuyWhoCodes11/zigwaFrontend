@@ -3,6 +3,9 @@ import { StyleSheet, View, Modal, Button, Text, Touchable, TouchableOpacity, Ima
 import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location'
+import { useFonts } from 'expo-font'
+import AppLoading from "expo-app-loading";
+
 export default function Citizen({ route, navigation }) {
   useEffect(() => {
     const getLocation = async () => {
@@ -37,8 +40,16 @@ export default function Citizen({ route, navigation }) {
   function handleCamera(){
 
   }
+
+  let [fontsLoaded] = useFonts({
+    'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
+  });
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
-    <View>
+    <View style={styles.all}>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -53,20 +64,57 @@ export default function Citizen({ route, navigation }) {
         <Marker coordinate={{ longitude: (location?.longitude || 0), latitude: (location?.latitude) || 0 }} title='desired location' />
       </MapView>
       <View>
-        <TouchableOpacity style={{alignSelf:'center'}} onPress={handleCamera}>
-          <Image style={{ height: 60, width: 60}} source={require('../../images/3178179.png')} />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ alignSelf: 'center',backgroundColor:'#4eeff5',borderRadius:20,padding:10 }} onPress={loadLocation}>
-          <Text>get location</Text>
-        </TouchableOpacity>
+        <View style={{height:1,width:1}}>
+          <Image style={styles.nav} source={require('../../images/navbar.png')} />
+        </View>
+     
+        <View>
+            <TouchableOpacity style={{alignSelf:'center',elevation:20}}onPress={handleCamera}>
+              <Image style={styles.cam} source={require('../../images/3178179.png')} />
+            </TouchableOpacity>
+          </View>
+        <View style={styles.mapdownbar}>
+          <Text style={{color:'white',fontFamily:'bebas', alignSelf:'center',padding:20,fontSize:18,bottom:80}}>Found trash? Take a Snap!</Text>
+        <View style={{bottom:80}}>
+          <TouchableOpacity style={{ alignSelf: 'center',backgroundColor:'white',borderRadius:20,padding:15}} onPress={loadLocation}>
+            <Text style={{fontFamily:'bebas'}}>Get location</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+
+      </View>
+
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   map: {
-    height: '80%',
+    height: '65%',
     width: '100%'
-  }
+  },
+
+  mapdownbar: {
+    backgroundColor: "#5e17eb",
+    borderRadius: 15
+  },
+
+  all: {
+    backgroundColor: "#5e17eb",
+    height:'100%',
+
+  },
+
+  cam: {
+    height:150,
+    width:150,
+    top:-70
+  },
+
+  nav: {
+    height:220,
+    width:200,
+    top:-580,
+    left: -25
+   }
 });

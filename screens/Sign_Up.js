@@ -144,10 +144,6 @@ export default function Sign_Up({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    backgroundColor: "purple",
-    bottom: -20
-  },
 
   coverr: {
     height:1000,
