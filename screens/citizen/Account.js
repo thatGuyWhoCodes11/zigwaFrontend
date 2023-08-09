@@ -1,27 +1,66 @@
 import React from 'react'
 import { View, Text,TouchableOpacity } from 'react-native'
+import { useFonts } from 'expo-font'
+import AppLoading from "expo-app-loading";
 export default function Account({ route }) {
     console.log(route.params.params.params)
+    let [fontsLoaded] = useFonts({
+        'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
+      });
+      if (!fontsLoaded) {
+        return <AppLoading />;
+      }
+
     return (
-        <View style={{ display:'flex', backgroundColor:'#7aabfa' }}>
-            <TouchableOpacity style={{padding:5,flexDirection:'row',display:'flex', justifyContent:'space-between'}}>
-                <Text>change username</Text>
-                <Text>{route.params.params.params.username}</Text>
+        <View style={{ top:100,display:'flex',padding:15 }}>
+            <View style={{paddingBottom:10}}> 
+              <View style={{padding:10,borderColor:'#5e17eb',borderWidth:1,borderRadius:15}}>
+                <TouchableOpacity style={{padding:5,flexDirection:'row',display:'flex', justifyContent:'space-between'}}>
+                    <Text style={{fontFamily:'bebas'}}>Change username</Text>
+                    <Text style={{fontFamily:'bebas'}}>{route.params.params.params.username}</Text>
+                </TouchableOpacity>
+            </View>
+
+            </View>
+
+            <View style={{paddingBottom:10}}>
+
+              <View style={{padding:10,borderColor:'#5e17eb',borderWidth:1,borderRadius:15}}>
+                <TouchableOpacity style={{padding:5,flexDirection:'row',justifyContent:'space-between'}}>
+                    <Text style={{fontFamily:'bebas'}}>Change password</Text>
+                </TouchableOpacity>
+               </View>
+
+            </View>
+
+            <View style={{paddingBottom:10}}>
+
+              <View style={{padding:10,borderColor:'#5e17eb',borderWidth:1,borderRadius:15}}>
+                <TouchableOpacity style={{padding:5,flexDirection:'row',justifyContent:'space-between'}}>
+                    <Text style={{fontFamily:'bebas'}}>Change profile picture</Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+
+            <View style={{paddingBottom:10}}>
+              <View style={{padding:10,borderColor:'#5e17eb',borderWidth:1,borderRadius:15}}>  
+                <TouchableOpacity style={{padding:5,flexDirection:'row',justifyContent:'space-between'}}>
+                    <Text style={{fontFamily:'bebas'}}>Change name</Text>
+                    <Text style={{fontFamily:'bebas'}}>{route.params.params.params.name}</Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+
+
+            <View style={{padding:10,borderColor:'#5e17eb',borderWidth:1,borderRadius:15,backgroundColor:'#5e17eb'}}>
+              <TouchableOpacity>
+              <Text style={{color:'white',fontFamily:'bebas'}}>Report</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{padding:5,flexDirection:'row',justifyContent:'space-between'}}>
-                <Text>change password</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{padding:5,flexDirection:'row',justifyContent:'space-between'}}>
-                <Text>change profile picture</Text>
-                <Text>username</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{padding:5,flexDirection:'row',justifyContent:'space-between'}}>
-                <Text>change name</Text>
-                <Text>{route.params.params.params.name}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Text>Report</Text>
-            </TouchableOpacity>
+
+            </View>
+
         </View>
     )
 }
