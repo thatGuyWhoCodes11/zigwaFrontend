@@ -129,21 +129,25 @@ export default function Citizen({ route, navigation }) {
         </View>
         {imageModal &&
           <Modal>
-            <View style={{}}>
-              <Text style={{ fontSize: 30 }}>the selected image: </Text>
+            <View style={{padding:20,borderBottomWidth:1, borderBottomColor:'#5e17eb'}}>
+              <Text style={{fontSize:25,fontFamily:'bebas'}}>Here's your snap!</Text>
+            </View>
+            <View style={{padding:10}}>
+              <Text style={{ fontSize: 20,fontFamily:'bebas' }}>The Image: </Text>
             </View>
             <View style={{}}>
-              <Image source={userImage} style={{ height: 150, width: 150, right: 0, margin: 30 }} />
+              <Image source={userImage} style={{ height: 300, width: 300, right: 0, margin: 30 ,borderRadius:15,bottom:10,alignSelf:'center'}} />
             </View>
-            <View style={{}}>
-              <Text style={{ fontSize: 30 }} >your location: {geoLocation}</Text>
+            <View style={{padding:10}}>
+              <Text style={{ fontSize: 20,fontFamily:'bebas' }} >Location: {geoLocation}</Text>
             </View>
-            <TouchableOpacity style={{backgroundColor:'blue',margin:10}} onPress={() => { setImageModal(false) }}>
-              <Text>cancel</Text>
+            <TouchableOpacity onPress={sendImage} style={{backgroundColor:'#5e17eb',margin:20,padding:10,borderRadius:15}}>
+              <Text style={{color:'white',fontFamily:'bebas',alignSelf:'center',fontSize:15}}>Send</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={sendImage} style={{backgroundColor:'blue',margin:10}}>
-              <Text>send</Text>
+            <TouchableOpacity style={{backgroundColor:'#5e17eb',margin:20,padding:10,borderRadius:15}} onPress={() => { setImageModal(false) }}>
+              <Text style={{color:'white',fontFamily:'bebas',alignSelf:'center',fontSize:15}}>Cancel</Text>
             </TouchableOpacity>
+
           </Modal>}
       </View>
     </View>
