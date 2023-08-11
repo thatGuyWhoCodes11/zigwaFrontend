@@ -6,8 +6,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Sign_Up from './screens/Sign_Up';
 import Sign_In from './screens/Sign_In';
 import CitizenDrawer from './screens/CitizenDrawer';
+import CollectorStack from './screens/CollectorStack';
 const stack = createStackNavigator()
-const drawer = createDrawerNavigator()
 
 export default function App() {
   return (
@@ -15,6 +15,7 @@ export default function App() {
       <stack.Navigator screenOptions={{headerShown:false}} >
         <stack.Screen name='Sign_Up' component={Sign_Up} options={{ title: "", headerTransparent: true }} />
         <stack.Screen name='Sign_In' component={Sign_In} options={{ title: "", headerTransparent: true }} />
+        <stack.Screen name='CollectorStack' component={CollectorStack} />
         <stack.Screen name='CitizenDrawer' component={CitizenDrawer}  />
       </stack.Navigator>
     </NavigationContainer>

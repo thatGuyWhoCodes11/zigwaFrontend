@@ -19,6 +19,7 @@ export default function Sign_In({ navigation }) {
         formData.append('username', username)
         formData.append('password', password)
         axios.post('https://zigwa.cleverapps.io/login', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
+            console.log(res.data)
             if (res.data.errorCode == 0) {
                 switch (res.data.userData.userType) {
                     case 'citizen':
@@ -27,8 +28,8 @@ export default function Sign_In({ navigation }) {
                     case 'scrapDealer':
                         navigation.navigate('scrapDealerDrawer')
                         break;
-                    case 'Collector':
-                        navigation.navigate('collectorDrawer')
+                    case 'collector':
+                        navigation.navigate('CollectorStack',{ params: res.data.userData })
                         break;
                     default:
                         console.log("no such thing is proccessed")

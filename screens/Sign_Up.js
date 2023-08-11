@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Image, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Image, ImageBackground, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useState, useRef } from 'react';
 import Modal from "react-native-modal";
@@ -86,52 +86,53 @@ export default function Sign_Up({ navigation }) {
   }
 
   return (
-  
+
     <View style={styles.container}>
       <Image style={styles.image} source={require("../images/wel.png")} />
       <View style={styles.responsibleforbox}>
         <View style={styles.boxforall}>
-          <View>
-            <Text style={{ fontFamily: 'bebas', fontSize: 30 }}>Sign Up</Text>
-          </View>
-          <View style={styles.inp}>
-            <View style={styles.boxie}>
-              <TextInput ref={refName} onChangeText={(text) => handleTextChange(text, refName)} style={styles.TextInput} placeholder='Name'></TextInput>
+          <ScrollView>
+            <View>
+              <Text style={{ fontFamily: 'bebas', fontSize: 30 }}>Sign Up</Text>
             </View>
-            <View style={styles.boxie}>
-              <TextInput ref={refUsername} onChangeText={(text) => handleTextChange(text, refUsername)} style={styles.TextInput} placeholder='UserName'></TextInput>
+            <View style={styles.inp}>
+              <View style={styles.boxie}>
+                <TextInput ref={refName} onChangeText={(text) => handleTextChange(text, refName)} style={styles.TextInput} placeholder='Name'></TextInput>
+              </View>
+              <View style={styles.boxie}>
+                <TextInput ref={refUsername} onChangeText={(text) => handleTextChange(text, refUsername)} style={styles.TextInput} placeholder='UserName'></TextInput>
+              </View>
+              <View style={styles.boxie}>
+                <TextInput ref={refPassword} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPassword)} style={styles.TextInput} placeholder='Password'></TextInput>
+              </View>
+              <View style={styles.boxie}>
+                <TextInput ref={refPasswordRep} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPasswordRep)} style={styles.TextInput} placeholder='Repeat Password'></TextInput>
+              </View>
+              <View style={styles.boxie}>
+                <TextInput ref={refDOB} onChangeText={(text) => handleTextChange(text, refDOB)} style={styles.TextInput} placeholder='Date Of Birth: YYYY/MM/DD'></TextInput>
+              </View>
+              <View style={styles.boxie}>
+                <TextInput ref={refPhoneNum} onChangeText={(text) => handleTextChange(text, refPhoneNum)} style={styles.TextInput} placeholder='Phone Number'></TextInput>
+              </View>
             </View>
-            <View style={styles.boxie}>
-              <TextInput ref={refPassword} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPassword)} style={styles.TextInput} placeholder='Password'></TextInput>
+            <View>
+              <Picker onValueChange={(item) => { setOption(item) }} selectedValue={option}>
+                <Picker.Item value={null} label='select your role...' ></Picker.Item>
+                <Picker.Item value='collector' label='collector' ></Picker.Item>
+                <Picker.Item value='scrapDealer' label='scrap dealer' ></Picker.Item>
+                <Picker.Item value='citizen' label='citizen' ></Picker.Item>
+              </Picker>
             </View>
-            <View style={styles.boxie}>
-              <TextInput ref={refPasswordRep} secureTextEntry={true} onChangeText={(text) => handleTextChange(text, refPasswordRep)} style={styles.TextInput} placeholder='Repeat Password'></TextInput>
+            <View style={styles.button}>
+              <Button color='#5e17eb' title='sign up' onPress={handleSignInButton} />
             </View>
-            <View style={styles.boxie}>
-              <TextInput ref={refDOB} onChangeText={(text) => handleTextChange(text, refDOB)} style={styles.TextInput} placeholder='Date Of Birth: YYYY/MM/DD'></TextInput>
+            <View style={styles.button}>
+              <Button color='#5e17eb' title='sign in instead' onPress={() => navigation.navigate('Sign_In')} />
             </View>
-            <View style={styles.boxie}>
-              <TextInput ref={refPhoneNum} onChangeText={(text) => handleTextChange(text, refPhoneNum)} style={styles.TextInput} placeholder='Phone Number'></TextInput>
-            </View>
-
-
-          </View>
-          <View>
-            <Picker onValueChange={(item) => { setOption(item) }} selectedValue={option}>
-              <Picker.Item value={null} label='select your role...' ></Picker.Item>
-              <Picker.Item value='collector' label='collector' ></Picker.Item>
-              <Picker.Item value='scrapDealer' label='scrap dealer' ></Picker.Item>
-              <Picker.Item value='citizen' label='citizen' ></Picker.Item>
-            </Picker>
-          </View>
-          <View style={styles.button}>
-            <Button color='#5e17eb' title='sign up' onPress={handleSignInButton} />
-          </View>
-          <View style={styles.button}>
-            <Button color='#5e17eb' title='sign in instead' onPress={() => navigation.navigate('Sign_In')} />
-          </View>
+          </ScrollView>
         </View>
       </View>
+
       <Modal isVisible={modal}>
         <View style={{ alignItems: 'center', backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
           <Text style={{ marginBottom: 10 }}>error, {reason}</Text>
@@ -146,9 +147,9 @@ export default function Sign_Up({ navigation }) {
 const styles = StyleSheet.create({
 
   coverr: {
-    height:1000,
-    top:30
-      
+    height: 1000,
+    top: 30
+
   },
 
 
