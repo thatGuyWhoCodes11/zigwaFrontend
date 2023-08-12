@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Image, ScrollView, Text, View, TouchableOpacity } from 'react-native';
 
 export default function Home({ route,navigation }) {
-    const [users, setUsers] = useState(null)
+    const [users, setUsers] = useState([])
     const [userGeoLocation, setUserGeoLocation] = useState([])
     const [coords,setCoords]=useState([])
     useEffect(() => {
@@ -30,7 +30,7 @@ export default function Home({ route,navigation }) {
         return;
     }, [])
     function HandleAccept(i){
-        navigation.navigate('Reports',coords[i])
+        navigation.navigate('Reports',{coords:coords[i],users:users,geoLocation:userGeoLocation[i],collectorUserName:route.params.username})
     }
     return (
         <View>
