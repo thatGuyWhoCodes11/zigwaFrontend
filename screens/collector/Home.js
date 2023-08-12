@@ -39,7 +39,7 @@ export default function Home({ route,navigation }) {
                 <ScrollView horizontal={true} >
                     {users && userGeoLocation ? users.map((e,i) => {
                         return (
-                            <View style={{ display: 'flex' }}>
+                            <View key={i} style={{ display: 'flex' }}>
                                 <Image style={{ height: 100, width: 100, flexGrow: 2 }} source={{ uri: 'data:image/png;base64,' + e.buffer }} />
                                 <TouchableOpacity onPress={()=>HandleAccept(i)}>
                                     <Image style={{ height: 40, width: 40 }} source={require('../../images/checkmark.png')} />

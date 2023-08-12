@@ -36,7 +36,7 @@ export default function Reports({ route }) {
             }
         })()
         return;
-    }, [])
+    }, [coords])
     return (
         <View>
             {coords ? <MapView style={{ height: '80%', width: '100%' }} showsUserLocation initialRegion={{
