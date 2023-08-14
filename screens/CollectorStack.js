@@ -8,6 +8,7 @@ import Result from './collector/Result';
 import AcceptedList from './collector/AcceptedList';
 import CancelledList from './collector/CancelledList';
 import CompletedList from './collector/CompletedList';
+import Accept_details from './collector/Accept_details';
 const stack = createStackNavigator()
 
 export default function CollectorStack({ route }) {
@@ -19,7 +20,7 @@ export default function CollectorStack({ route }) {
             <stack.Screen name='CancelledList' component={CancelledList} />
             <stack.Screen name='AcceptedList' component={AcceptedList} />
             <stack.Screen name='CompletedList' component={CompletedList} />
-
+            <stack.Screen name='Accept_details' component={Accept_details} />
         </stack.Navigator>
     )
 }

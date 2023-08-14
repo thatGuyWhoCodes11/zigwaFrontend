@@ -42,7 +42,7 @@ export default function Reports({ navigation,route }) {
                 console.error(error);
             }
             route.params.users.forEach(e => {
-                if (JSON.parse(e.location).latitude == route.params.coords.latitude) {
+                if (e.location.latitude == route.params.coords.latitude) {
                     setUserName(e.username)
                     setImage(e.buffer)
                 }

@@ -65,7 +65,7 @@ export default function Home({ route, navigation }) {
             formData.append('status', 'accepted - onGoing')
             formData.append('collectorLocation', `{"latitude":${located.coords.latitude},"longitude":${located.coords.longitude}}`)
             formData.append('citizenLocation', `{"latitude":${coords[i].latitude},"longitude":${coords[i].longitude}}`)
-            const target = citizens.find((e) => (JSON.parse(e.location).latitude == coords[i].latitude))
+            const target = citizens.find((e) => (e.location.latitude == coords[i].latitude))
             formData.append('citizenUsername', target.username)
             formData.append('collectorUsername', route.params.username)
             console.log(formData)

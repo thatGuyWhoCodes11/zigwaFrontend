@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useEffect,useState} from "react";
-import { View,Text,ScrollView } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, ScrollView } from "react-native";
+import { Button } from "react-native";
 import LoadingAnimation from "../LoadingAnimation";
 
 export default function AcceptedList() {
@@ -10,7 +11,7 @@ export default function AcceptedList() {
     useEffect(() => {
         (async () => {
             const res = await axios.get('https://zigwa.cleverapps.io/transactions')
-            if (res.data.userData.errorCode == 0) {
+            if (res.data.errorCode == 0) {
                 res.data.userData.forEach(async (e) => {
                     if (e.status === "accepted - onGoing") {
                         setUsers(prev => [...prev, e])
@@ -27,6 +28,9 @@ export default function AcceptedList() {
             }
         })()
     }, [])
+    function handleDetails(i){
+        //citizen's coords, 
+    }
     return (
         <View>
             {(citizenGeoLocations && collectorGeoLocations && users) ?
@@ -35,6 +39,7 @@ export default function AcceptedList() {
                     (<View key={i} style={{ alignItems: 'center' }} >
                         <Text>the guy who reported the trash: {e.citizenUsername}</Text>
                         <Text>his location: {citizenGeoLocations[i]}</Text>
+                        <Button title="details" onPress={()=>handleDetails(i)} />
                     </View>))}
                 </ScrollView> : <LoadingAnimation />}
         </View>
