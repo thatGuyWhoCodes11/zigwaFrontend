@@ -1,14 +1,14 @@
 import React from 'react'
 import { View, Text,TouchableOpacity } from 'react-native'
 import { useFonts } from 'expo-font'
-import AppLoading from "expo-app-loading";
+import LoadingAnimation from '../LoadingAnimation';
 export default function Account({ route }) {
     console.log(route.params.params.params)
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
       });
       if (!fontsLoaded) {
-        return <AppLoading />;
+        return <LoadingAnimation />;
       }
 
     return (

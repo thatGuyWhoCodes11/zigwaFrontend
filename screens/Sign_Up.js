@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TextInput, Image, ImageBackground, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Image, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useState, useRef } from 'react';
 import Modal from "react-native-modal";
 import axios from 'axios'
 import { useFonts } from 'expo-font'
-import AppLoading from "expo-app-loading";
+import LoadingAnimation from './LoadingAnimation';
 
 export default function Sign_Up({ navigation }) {
   const [name, setName] = useState('')
@@ -23,6 +23,7 @@ export default function Sign_Up({ navigation }) {
   const [reason, setReason] = useState('null')
   const [modal, setError] = useState(false)
   const [option, setOption] = useState('select your role...');
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleTextChange(text, inpRef) {
     if (inpRef === refName)
@@ -75,14 +76,27 @@ export default function Sign_Up({ navigation }) {
     formData.append('dateOfBirth', DOB)
     formData.append('userType', option)
     formData.append('phoneNumber', phoneNum)
-    axios.post('https://zigwa.cleverapps.io/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => { console.log(res.data) }).catch((err) => { console.log(err) })
+    setIsLoading(true)
+    axios.post('https://zigwa.cleverapps.io/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
+      setIsLoading(false)
+      if (res.data) {
+        if (res.data.errorCode == 0) {
+          
+          navigation.navigate('Sign_In')
+        } else if (res.data.errorCode == 1){
+          Alert.alert('user is already registered')
+        }
+      }
+      else{
+        Alert.alert('connection error!')}
+    }).catch((err) => { setIsLoading(false);Alert.alert(JSON.stringify(err)); console.error(err) })
   }
 
   let [fontsLoaded] = useFonts({
     'bebas': require('../assets/fonts/BebasNeue-Regular.ttf')
   });
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <LoadingAnimation />;
   }
 
   return (
@@ -132,7 +146,8 @@ export default function Sign_Up({ navigation }) {
           </ScrollView>
         </View>
       </View>
-
+      {/* handling loading animations */}
+      {isLoading && <LoadingAnimation />}
       <Modal isVisible={modal}>
         <View style={{ alignItems: 'center', backgroundColor: 'white', borderRadius: 5, padding: 10 }}>
           <Text style={{ marginBottom: 10 }}>error, {reason}</Text>
@@ -199,5 +214,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     top: -10,
     left: 70,
-  }
+  },
 });

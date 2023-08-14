@@ -4,9 +4,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location'
 import { useFonts } from 'expo-font'
-import AppLoading from "expo-app-loading";
 import * as ImagePicker from 'expo-image-picker'
 import axios from 'axios';
+import LoadingAnimation from '../LoadingAnimation';
 
 export default function Citizen({ route, navigation }) {
   //handle location from user
@@ -75,7 +75,6 @@ export default function Citizen({ route, navigation }) {
     formData=new FormData()
     formData.append('image',userImage.base64)
     formData.append('location',JSON.stringify(location))
-    console.log(formData)
     axios.post('https://zigwa.cleverapps.io/location', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res)=>{
       if(res.data.errorCode==0){
         setImageModal(false)
@@ -91,7 +90,7 @@ export default function Citizen({ route, navigation }) {
     'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
   });
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <LoadingAnimation />;
   }
   return (
     <View style={styles.all}>
@@ -109,7 +108,7 @@ export default function Citizen({ route, navigation }) {
         followsUserLocation={true}
       >
         <Marker coordinate={{ longitude: (location?.longitude || 0), latitude: (location?.latitude) || 0 }} title='desired location' />
-      </MapView> : <AppLoading />}
+      </MapView> : <LoadingAnimation />}
       <View>
         <View style={{ height: 1, width: 1 }}>
           <Image style={styles.nav} source={require('../../images/navbar.png')} />

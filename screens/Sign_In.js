@@ -1,11 +1,12 @@
-import { View, Text, Button, TextInput, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, Button, TextInput, StyleSheet, ImageBackground, Alert } from "react-native";
 import { useState, useRef } from "react";
 import axios from "axios";
 import { useFonts } from 'expo-font'
-import AppLoading from "expo-app-loading";
+import LoadingAnimation from "./LoadingAnimation";
 export default function Sign_In({ navigation }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const refUsername = useRef('')
     const refPassword = useRef('')
     function handleText(text, ref) {
@@ -18,8 +19,9 @@ export default function Sign_In({ navigation }) {
         const formData = new FormData()
         formData.append('username', username)
         formData.append('password', password)
+        setIsLoading(true)
         axios.post('https://zigwa.cleverapps.io/login', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
-            console.log(res.data)
+            setIsLoading(false)
             if (res.data.errorCode == 0) {
                 switch (res.data.userData.userType) {
                     case 'citizen':
@@ -29,53 +31,46 @@ export default function Sign_In({ navigation }) {
                         navigation.navigate('scrapDealerDrawer')
                         break;
                     case 'collector':
-                        navigation.navigate('CollectorStack',{ params: res.data.userData })
+                        navigation.navigate('CollectorStack', { params: res.data.userData })
                         break;
                     default:
-                        console.log("no such thing is proccessed")
+                        Alert.alert('error: contact the tech support')
                 }
             } else {
-                console.log(res.data)
+                Alert.alert('error: contact the tech support')
             }
-        }).catch((err) => { console.log(err) })
+        }).catch((err) => { setIsLoading(false); Alert.alert('check your internet connection and try again') })
     }
 
     let [fontsLoaded] = useFonts({
         'bebas': require('../assets/fonts/BebasNeue-Regular.ttf')
-      });
-      if (!fontsLoaded) {
-        return <AppLoading />;
-      }
+    });
+    if (!fontsLoaded) {
+        return <LoadingAnimation />;
+    }
 
     return (
         <ImageBackground style={styles.cover} source={require('../images/welb.jpeg')}>
-        <View style={styles.all}>
-            
-              <View style={styles.box}>
-                  <View>
-                      <Text style={{fontFamily:'bebas',fontSize:30}}>Welcome back!</Text>
-                  </View>
-                <View style={{padding:10}}>
-                  <TextInput style={{borderRadius:5,fontFamily:'bebas',borderWidth:.5,padding:5}}placeholder="Username" onChangeText={(text) => handleText(text, refUsername)} ref={refUsername} />
+            {isLoading && <LoadingAnimation/>}
+            <View style={styles.all}>
+                <View style={styles.box}>
+                    <View>
+                        <Text style={{ fontFamily: 'bebas', fontSize: 30 }}>Welcome back!</Text>
+                    </View>
+                    <View style={{ padding: 10 }}>
+                        <TextInput style={{ borderRadius: 5, fontFamily: 'bebas', borderWidth: .5, padding: 5 }} placeholder="Username" onChangeText={(text) => handleText(text, refUsername)} ref={refUsername} />
+                    </View>
+                    <View style={{ padding: 10 }}>
+                        <TextInput style={{ borderRadius: 5, fontFamily: 'bebas', borderWidth: .5, padding: 5 }} placeholder="Password" secureTextEntry onChangeText={(text) => handleText(text, refPassword)} ref={refPassword} />
+                    </View>
+                    <View style={{ padding: 10 }}>
+                        <Button color='#5e17eb' title="sign in" onPress={sendCredits} />
+                    </View>
+                    <View style={{ padding: 10 }}>
+                        <Button color='#5e17eb' title="sign up instead" onPress={() => navigation.goBack()} />
+                    </View>
                 </View>
-                <View style={{padding:10}}> 
-                  <TextInput style={{borderRadius:5,fontFamily:'bebas',borderWidth:.5,padding:5}} placeholder="Password" secureTextEntry onChangeText={(text) => handleText(text, refPassword)} ref={refPassword} />
-                </View>
-                <View style={{padding:10}}>
-                  <Button color='#5e17eb' title="sign in" onPress={sendCredits} />
-                </View>
-                <View style={{padding:10}}>
-                  <Button color='#5e17eb' title="sign up instead" onPress={() => navigation.goBack()} />
-                </View>
-              
-              
             </View>
-
-            
-
-
-
-        </View>
         </ImageBackground>
     )
 }
@@ -85,20 +80,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         elevation: 20,
         padding: 20,
-        top:225,
+        top: 225,
         borderRadius: 15,
-        width:350,
-        alignContent:'center',
-        fontFamily:'bebas'
+        width: 350,
+        alignContent: 'center',
+        fontFamily: 'bebas'
     },
 
     all: {
-        alignItems:'center',
+        alignItems: 'center',
     },
-    
+
     cover: {
-        height:1000,
-        top:30
-        
+        height: 1000,
+        top: 30
+
     }
 })

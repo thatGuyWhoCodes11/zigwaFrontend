@@ -2,7 +2,7 @@ import React from "react"
 import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer"
 import { View, Text, Image, StyleSheet} from "react-native"
 import { useFonts } from 'expo-font'
-import AppLoading from "expo-app-loading";
+import LoadingAnimation from "../LoadingAnimation";
 
 export default function CustomDrawerCitizen({route,...props}) {
 
@@ -10,7 +10,7 @@ export default function CustomDrawerCitizen({route,...props}) {
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
       });
       if (!fontsLoaded) {
-        return <AppLoading />;
+        return <LoadingAnimation />;
       }
 
     return (
@@ -27,7 +27,6 @@ export default function CustomDrawerCitizen({route,...props}) {
                 <View style={{bottom:80}}>
                   <DrawerItemList {...props} />
                 </View>
-               
             </DrawerContentScrollView>
         </View>
 
