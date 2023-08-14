@@ -4,7 +4,7 @@ import { View, Text, ScrollView } from "react-native";
 import { Button } from "react-native";
 import LoadingAnimation from "../LoadingAnimation";
 
-export default function AcceptedList() {
+export default function AcceptedList({navigation,route}) {
     const [users, setUsers] = useState([])
     const [citizenGeoLocations, setCitizenGeolocations] = useState([])
     const [collectorGeoLocations, setCollectorGeoLocations] = useState([])
@@ -29,7 +29,8 @@ export default function AcceptedList() {
         })()
     }, [])
     function handleDetails(i){
-        //citizen's coords, 
+        const params={user:users[i],citizenGeoLocation:citizenGeoLocations[i],collectorGeoLocation:collectorGeoLocations[i]}
+        navigation.navigate('Accept_details',params)
     }
     return (
         <View>
