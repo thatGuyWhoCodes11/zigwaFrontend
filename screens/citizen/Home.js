@@ -71,19 +71,19 @@ export default function Citizen({ route, navigation }) {
       setGeoLocation(place_name)
     }).catch((err) => { console.log(err); setImageModal(false) })
   }
-  function sendImage(){
-    formData=new FormData()
-    formData.append('image',userImage.base64)
-    formData.append('location',JSON.stringify(location))
-    axios.post('https://zigwa.cleverapps.io/location', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res)=>{
-      if(res.data.errorCode==0){
+  function sendImage() {
+    formData = new FormData()
+    formData.append('image', userImage.base64)
+    formData.append('location', JSON.stringify(location))
+    axios.post('https://zigwa.cleverapps.io/location', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
+      if (res.data.errorCode == 0) {
         setImageModal(false)
         alert('success!, you can see the sent image in reports')
-      }else{
+      } else {
         alert('error, something went wrong')
         console.log(res.data)
       }
-    }).catch(err=>{console.log(err);alert('internal error');setImageModal(false)})
+    }).catch(err => { console.log(err); alert('internal error'); setImageModal(false) })
   }
   //end of handling camera and beginning to handle components
   let [fontsLoaded] = useFonts({
@@ -94,20 +94,19 @@ export default function Citizen({ route, navigation }) {
   }
   return (
     <View style={styles.all}>
-      {location ? <MapView
+      {(location?.latitude) ? <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-          latitude: location?.longitude || 0,
-          longitude: location?.latitude || 0
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001,
+          latitude: (location?.latitude),
+          longitude: (location?.longitude)
         }
         }
         showsUserLocation={true}
         followsUserLocation={true}
       >
-        <Marker coordinate={{ longitude: (location?.longitude || 0), latitude: (location?.latitude) || 0 }} title='desired location' />
       </MapView> : <LoadingAnimation />}
       <View>
         <View style={{ height: 1, width: 1 }}>
@@ -128,23 +127,23 @@ export default function Citizen({ route, navigation }) {
         </View>
         {imageModal &&
           <Modal>
-            <View style={{padding:20,borderBottomWidth:1, borderBottomColor:'#5e17eb'}}>
-              <Text style={{fontSize:25,fontFamily:'bebas'}}>Here's your snap!</Text>
+            <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: '#5e17eb' }}>
+              <Text style={{ fontSize: 25, fontFamily: 'bebas' }}>Here's your snap!</Text>
             </View>
-            <View style={{padding:10}}>
-              <Text style={{ fontSize: 20,fontFamily:'bebas' }}>The Image: </Text>
+            <View style={{ padding: 10 }}>
+              <Text style={{ fontSize: 20, fontFamily: 'bebas' }}>The Image: </Text>
             </View>
             <View style={{}}>
-              <Image source={userImage} style={{ height: 300, width: 300, right: 0, margin: 30 ,borderRadius:15,bottom:10,alignSelf:'center'}} />
+              <Image source={userImage} style={{ height: 300, width: 300, right: 0, margin: 30, borderRadius: 15, bottom: 10, alignSelf: 'center' }} />
             </View>
-            <View style={{padding:10}}>
-              <Text style={{ fontSize: 20,fontFamily:'bebas' }} >Location: {geoLocation}</Text>
+            <View style={{ padding: 10 }}>
+              <Text style={{ fontSize: 20, fontFamily: 'bebas' }} >Location: {geoLocation}</Text>
             </View>
-            <TouchableOpacity onPress={sendImage} style={{backgroundColor:'#5e17eb',margin:20,padding:10,borderRadius:15}}>
-              <Text style={{color:'white',fontFamily:'bebas',alignSelf:'center',fontSize:15}}>Send</Text>
+            <TouchableOpacity onPress={sendImage} style={{ backgroundColor: '#5e17eb', margin: 20, padding: 10, borderRadius: 15 }}>
+              <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', fontSize: 15 }}>Send</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{backgroundColor:'#5e17eb',margin:20,padding:10,borderRadius:15}} onPress={() => { setImageModal(false) }}>
-              <Text style={{color:'white',fontFamily:'bebas',alignSelf:'center',fontSize:15}}>Cancel</Text>
+            <TouchableOpacity style={{ backgroundColor: '#5e17eb', margin: 20, padding: 10, borderRadius: 15 }} onPress={() => { setImageModal(false) }}>
+              <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', fontSize: 15 }}>Cancel</Text>
             </TouchableOpacity>
 
           </Modal>}
