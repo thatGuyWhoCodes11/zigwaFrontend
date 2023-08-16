@@ -13,41 +13,35 @@ export default function Home({ route, navigation }) {
     useEffect(() => {
         try {
             (async () => {
-                let flag = false
                 const res = await axios.get('https://zigwa.cleverapps.io/location')
                 if (res.data.errorCode == 0) {
                     let location = []
                     setCitizens(res.data.doc)
                     res.data.doc.forEach(async (e) => {
-                        //TODO make transactions table checking here so that it doesn't show to collector if he accepts user request
                         const res = await axios.get(`https://zigwa.cleverapps.io/transactions?citizenUsername=${e.username}`)
+                        const resIgnore = await axios.get(`https://zigwa.cleverapps.io/ignore?collectorUsername=${route.params.username}&imageName=${e.image_name}`)
+                        const res2 = await axios.get(`https://api.maptiler.com/geocoding/${e.location.longitude},${e.location.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
                         if (res.data.userData.length != 0) {
+                            console.log('print!')
                             res.data.userData.forEach((e2) => {
-                                if (e2.citizenLocation.latitude !== e.location.latitude) {
+                                if ((e2.citizenLocation.latitude !== e.location.latitude) && (resIgnore.data.errorCode != 0)) {//to check whether the image exists in transactions or not
                                     location.push(e.location);
                                     setUsers(prev => [...prev, e])
+                                    const { features: [{ place_name }] } = res2.data
+                                    setUserGeoLocation(prev => [...prev, place_name])
+                                    setCoords(location)
                                 }
                             })
                         } else {
-                            flag = true
-                            location.push(e.location)
-                            setUsers(prev => [...prev, e])
-                            setCoords(location)
-                            location.forEach(async (e) => {
-                                const res2 = await axios.get(`https://api.maptiler.com/geocoding/${e.longitude},${e.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
+                            if ((resIgnore.data.errorCode != 0)) {//to check whether the image exists in transactions or not
+                                location.push(e.location);
+                                setUsers(prev => [...prev, e])
                                 const { features: [{ place_name }] } = res2.data
                                 setUserGeoLocation(prev => [...prev, place_name])
-                            })
+                                setCoords(location)
+                            }
                         }
                     })
-                    if (flag) {
-                        setCoords(location)
-                        location.forEach(async (e) => {
-                            const res2 = await axios.get(`https://api.maptiler.com/geocoding/${e.longitude},${e.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
-                            const { features: [{ place_name }] } = res2.data
-                            setUserGeoLocation(prev => [...prev, place_name])
-                        })
-                    }
                 }
                 else
                     alert('failed connecting to server')
@@ -78,33 +72,19 @@ export default function Home({ route, navigation }) {
             }).catch((err) => { console.log(err); Alert.alert('error: connnection error, make sure you are connected to internet') })
         }
     }
-    async function handleCancel(i) {
-        const res = await axios.delete(`https://zigwa.cleverapps.io/location?latitude=${users[i]?.location?.latitude}`)
+    async function handleCancel(index) {
+        const formData = new FormData
+        formData.append('imageName', citizens[index].image_name)
+        formData.append('collectorUsername', route.params.username)
+        const res = await axios.post('https://zigwa.cleverapps.io/ignore', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        console.log(res.data)
         if (res.data.errorCode == 0) {
-            const { status } = await Location.requestForegroundPermissionsAsync()
-            if (status !== 'granted') {
-                Alert.alert('warning, cannot function without location perms, please allow location')
-            } else {
-                const located = await Location.getCurrentPositionAsync()
-                const formData = new FormData()
-                formData.append('status', 'cancelled , no longer tracked')
-                formData.append('collectorLocation', `{"latitude":${located.coords.latitude},"longitude":${located.coords.longitude}}`)
-                formData.append('citizenLocation', `{"latitude":${coords[i].latitude},"longitude":${coords[i].longitude}}`)
-                const target = citizens.find((e) => (e.location.latitude == coords[i].latitude))
-                formData.append('citizenUsername', target.username)
-                formData.append('collectorUsername', route.params.username)
-                console.log(formData)
-                axios.post('https://zigwa.cleverapps.io/transactions', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
-                    if (res.data?.errorCode == 0) {
-                        users.splice(i, 1)
-                        userGeoLocation.splice(i, 1)
-                    } else {
-                        Alert.alert('something went wrong!')
-                    }
-                }).catch((err) => { console.log(err); Alert.alert('error: connnection error, make sure you are connected to internet') })
-            }
+            const updatedU = users.filter((_, i) => i !== index)
+            const updatedG = userGeoLocation.filter((_, i) => i !== index)
+            setUsers(updatedU)
+            setUserGeoLocation(updatedG)
         } else {
-            console.log(res.data)
+            Alert.alert('something went wrong!, please make sure you\'re connected to the internet!')
         }
     }
     return (
@@ -127,12 +107,10 @@ export default function Home({ route, navigation }) {
                                     <Text>{userGeoLocation[i]}</Text>
                                 </View>
                             )
-                        }) : <Text style={{fontSize:30}} >loading.....</Text>}
+                        }) : <Text style={{ fontSize: 30 }} >loading....</Text>}
                 </ScrollView>
             </View>
-            <Button title='cancelled things' onPress={() => navigation.navigate('CancelledList')} />
-            <Button title='proccessing stuff' onPress={() => navigation.navigate('AcceptedList')} />
-            <Button title='completed stuff' onPress={() => navigation.navigate('CompletedList')} />
+            <Button title='history' onPress={() => navigation.navigate('History')} />
         </View>
     )
 }
