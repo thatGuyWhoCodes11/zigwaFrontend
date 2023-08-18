@@ -10,7 +10,7 @@ const stack = createStackNavigator()
 export default function CollectorStack({ route }) {
     return (
         <stack.Navigator>
-            <stack.Screen name='Home' component={Home} initialParams={route.params.params} />
+            <stack.Screen name='Home' component={Home} initialParams={route.params.params} options={{ title: " ", headerTransparent: true }} />
             <stack.Screen name='Reports' component={Reports} />
             <stack.Screen name='Result' component={Result} />
             <stack.Screen name='History' component={History} />
