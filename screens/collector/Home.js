@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Button, Image, ScrollView, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { Button, Image, ScrollView, Text, View, TouchableOpacity, Alert ,StyleSheet,adjustsFontSizeToFits} from 'react-native';
 import * as Location from 'expo-location'
 import LoadingAnimation from '../LoadingAnimation';
+import { useFonts } from 'expo-font'
 
 export default function Home({ route, navigation }) {
     const [users, setUsers] = useState([])
@@ -87,30 +88,77 @@ export default function Home({ route, navigation }) {
             Alert.alert('something went wrong!, please make sure you\'re connected to the internet!')
         }
     }
+
+    let [fontsLoaded] = useFonts({
+        'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
+      });
+      if (!fontsLoaded) {
+        return <LoadingAnimation />;
+      }
+
     return (
-        <View>
+        <View style={{backgroundColor:'white',flex:1}}>
             {isLoading && <LoadingAnimation />}
-            <Text>welcome, {route.params.name} </Text>
+            <View>
+               <Text style={styles.welbak}>Welcome back! {route.params.name} </Text>
+            </View>
             <View>
                 <ScrollView horizontal={true} >
                     {userGeoLocation ?
                         users.map((e, i) => {
                             return (
-                                <View key={i} style={{ display: 'flex' }}>
-                                    <Image style={{ height: 100, width: 100, flexGrow: 2 }} source={{ uri: 'data:image/png;base64,' + e.buffer }} />
-                                    <TouchableOpacity onPress={() => HandleAccept(i)}>
-                                        <Image style={{ height: 40, width: 40 }} source={require('../../images/checkmark.png')} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleCancel(i)} >
-                                        <Image style={{ height: 40, width: 40 }} source={require('../../images/xmark.png')} />
-                                    </TouchableOpacity>
-                                    <Text>{userGeoLocation[i]}</Text>
+                                <View key={i} style={{ display: 'flex' , padding: 20}}>
+                                    <View style={styles.sw}>
+                                    <Image style={{height:200,borderRadius:15}} source={{ uri: 'data:image/png;base64,' + e.buffer }} />
+                                      <View>
+                                         <View style={{flexDirection:'row'}}>
+                                           <TouchableOpacity onPress={() => HandleAccept(i)}>
+                                              <Image style={{ height: 130, width: 130}} source={require('../../images/checkmark.png')} />
+                                           </TouchableOpacity>
+                                           <TouchableOpacity onPress={() => handleCancel(i)} >
+                                              <Image style={{ height: 130, width: 130, }} source={require('../../images/xmark.png')} />
+                                           </TouchableOpacity>
+                                         </View>
+                                         <Text style={{fontFamily:'bebas',fontSize:20}}>Location:</Text>
+                                         <Text style={{fontFamily:'bebas', fontSize:15}}>{userGeoLocation[i]}</Text>
+                                      </View>
+                                    </View>
+
                                 </View>
                             )
                         }) : <Text style={{ fontSize: 30 }} >loading....</Text>}
                 </ScrollView>
             </View>
-            <Button title='history' onPress={() => navigation.navigate('History')} />
+            <TouchableOpacity style={{padding:20,alignSelf:'center',backgroundColor:'#5e17eb',width:'70%',borderRadius:15}}>
+                <Text style={{color:'white',alignSelf:'center',fontFamily:'bebas',fontSize:20}} onPress={() => navigation.navigate('History')}>History</Text>
+            </TouchableOpacity>
+            <Text style={{padding:10,fontFamily:'bebas',fontSize:20,alignSelf:'center'}}>Credits:</Text>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    sw : {
+        padding:10,
+        borderWidth:1,
+        width:300,
+        borderRadius:15,
+        borderColor:'#5e17eb',
+        borderBottomWidth: 2
+
+    },
+    welbak : {
+        margin:40,
+        top:50,
+        padding:20,
+        left:-40,
+        fontFamily:'bebas',
+        fontSize:25,
+        borderBottomWidth:2,
+        borderRightWidth:1,
+        borderTopWidth:1,
+        borderRadius:15,
+        borderColor:'#5e17eb'
+    }
+
+  });
