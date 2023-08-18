@@ -34,7 +34,12 @@ export default function Accept_details({navigation,route}) {
         })()
     },[])
     async function handleCollected(){
-        //TODO update the backend so that it has it in completedList when they press collected, also make collected so this bitch navigates to completedList
+        const res=await axios.put(`https://zigwa.cleverapps.io/transactions?id=${route.params.user._id}&updatedStatus=complete`)//updating status in server
+        if(res.data.errorCode==0)
+            navigation.navigate('Result',{username:route.params.user.citizenUsername,location:route.citizenGeoLocation,collectorUsername:route.params.user.collectorUsername})
+        else{
+            Alert.alert('something went wrong')
+        }
     }
     return (
         <View>

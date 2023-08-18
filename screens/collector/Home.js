@@ -13,6 +13,7 @@ export default function Home({ route, navigation }) {
     useEffect(() => {
         try {
             (async () => {
+                setIsLoading(true)
                 const res = await axios.get('https://zigwa.cleverapps.io/location')
                 if (res.data.errorCode == 0) {
                     let location = []
@@ -22,7 +23,6 @@ export default function Home({ route, navigation }) {
                         const resIgnore = await axios.get(`https://zigwa.cleverapps.io/ignore?collectorUsername=${route.params.username}&imageName=${e.image_name}`)
                         const res2 = await axios.get(`https://api.maptiler.com/geocoding/${e.location.longitude},${e.location.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
                         if (res.data.userData.length != 0) {
-                            console.log('print!')
                             res.data.userData.forEach((e2) => {
                                 if ((e2.citizenLocation.latitude !== e.location.latitude) && (resIgnore.data.errorCode != 0)) {//to check whether the image exists in transactions or not
                                     location.push(e.location);
@@ -33,7 +33,7 @@ export default function Home({ route, navigation }) {
                                 }
                             })
                         } else {
-                            if ((resIgnore.data.errorCode != 0)) {//to check whether the image exists in transactions or not
+                            if ((resIgnore.data.errorCode != 0)) {
                                 location.push(e.location);
                                 setUsers(prev => [...prev, e])
                                 const { features: [{ place_name }] } = res2.data
@@ -45,7 +45,8 @@ export default function Home({ route, navigation }) {
                 }
                 else
                     alert('failed connecting to server')
-            })()
+                setIsLoading(false)
+                })()
         } catch (err) { alert(JSON.stringify(err)); console.log(err) }
         return;
     }, [])
@@ -62,7 +63,6 @@ export default function Home({ route, navigation }) {
             const target = citizens.find((e) => (e.location.latitude == coords[i].latitude))
             formData.append('citizenUsername', target.username)
             formData.append('collectorUsername', route.params.username)
-            console.log(formData)
             axios.post('https://zigwa.cleverapps.io/transactions', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
                 if (res.data?.errorCode == 0) {
                     navigation.navigate('Reports', { coords: coords[i], users: users, geoLocation: userGeoLocation[i], collectorUserName: route.params.username })
@@ -77,7 +77,6 @@ export default function Home({ route, navigation }) {
         formData.append('imageName', citizens[index].image_name)
         formData.append('collectorUsername', route.params.username)
         const res = await axios.post('https://zigwa.cleverapps.io/ignore', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-        console.log(res.data)
         if (res.data.errorCode == 0) {
             const updatedU = users.filter((_, i) => i !== index)
             const updatedG = userGeoLocation.filter((_, i) => i !== index)

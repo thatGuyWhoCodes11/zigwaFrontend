@@ -6,8 +6,8 @@ export default function Report({route}) {
             <Text>thank you for your support!</Text>
             <Text>collected from: {route.params.location}</Text>
             <Text>citizen's name: {route.params.username}</Text>
-            <Text>collector's name: {route.params.collectorUsername} </Text>
-            <Image source={{uri:'data:img/png;base64,'+route.params.image}} style={{height:100,width:100}} />
+            <Text>collector's name: {route.params.collectorUsername} </Text>{route.params.image ?
+            <Image source={{uri:'data:img/png;base64,'+route.params.image}} style={{height:100,width:100}} />:<></>}
             <TouchableOpacity>
                 <Text>notify scrap dealer</Text>
             </TouchableOpacity>
