@@ -58,12 +58,12 @@ export default function Accept_details({navigation,route}) {
                     <Marker coordinate={{ latitude: (coords.latitude), longitude: (coords.longitude) }} />
                 </MapView> : <Text>loading....</Text>}
                 <View>
-                    <Text>from: {route.params.user.citizenUsername}</Text>
-                    <Text>trash location: {route.params.citizenGeoLocation}</Text>
-                    <Text>your location: {route.params.collectorGeoLocation}</Text>
+                    <Text>From: {route.params.user.citizenUsername}</Text>
+                    <Text>Trash location: {route.params.citizenGeoLocation}</Text>
+                    <Text>Your location: {route.params.collectorGeoLocation}</Text>
                     {/* <Image source={{ uri: 'data:image/png;base64,' + image }} style={{ height: 100, width: 100 }} /> it'll need image handling "***" */}
                     <TouchableOpacity onPress={handleCollected}>
-                        <Text>collected</Text>
+                        <Text>Collected</Text>
                     </TouchableOpacity>
                 </View>
             </View>

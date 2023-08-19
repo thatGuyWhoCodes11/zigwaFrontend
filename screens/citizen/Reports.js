@@ -5,6 +5,7 @@ import { Button } from "react-native";
 import LoadingAnimation from "../LoadingAnimation";
 import * as Location from 'expo-location'
 import MapView, { Marker, Polyline } from "react-native-maps";
+import { useFonts } from 'expo-font'
 
 export default function History({ navigation, route }) {
     const [users, setUsers] = useState([])
