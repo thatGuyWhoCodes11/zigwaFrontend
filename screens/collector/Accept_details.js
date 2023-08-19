@@ -3,6 +3,8 @@ import { Text, View, Image, TouchableOpacity,Alert } from "react-native"
 import MapView, { Marker, Polyline } from 'react-native-maps'
 import * as Location from 'expo-location'
 import axios from "axios"
+import { useFonts } from 'expo-font'
+import LoadingAnimation from "../LoadingAnimation";
 export default function Accept_details({navigation,route}) {
     const [coords, setCoords] = useState()
     const [path, setPath] = useState()
@@ -41,10 +43,20 @@ export default function Accept_details({navigation,route}) {
             Alert.alert('something went wrong')
         }
     }
+
+
+    let [fontsLoaded] = useFonts({
+        'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
+      });
+      if (!fontsLoaded) {
+        return <LoadingAnimation />;
+      }
+
+
     return (
         <View>
             <View>
-                {(coords && path) ? <MapView style={{ height: '80%', width: '100%' }} showsUserLocation initialRegion={{
+                {(coords && path) ? <MapView style={{ height: '60%', width: '100%' }} showsUserLocation initialRegion={{
                     latitudeDelta: 0.01990,
                     longitudeDelta: 0.5,
                     latitude: (coords.latitude),
@@ -56,16 +68,21 @@ export default function Accept_details({navigation,route}) {
                         strokeWidth={4}
                     />
                     <Marker coordinate={{ latitude: (coords.latitude), longitude: (coords.longitude) }} />
-                </MapView> : <Text>loading....</Text>}
-                <View>
-                    <Text>from: {route.params.user.citizenUsername}</Text>
-                    <Text>trash location: {route.params.citizenGeoLocation}</Text>
-                    <Text>your location: {route.params.collectorGeoLocation}</Text>
-                    {/* <Image source={{ uri: 'data:image/png;base64,' + image }} style={{ height: 100, width: 100 }} /> it'll need image handling "***" */}
-                    <TouchableOpacity onPress={handleCollected}>
-                        <Text>collected</Text>
-                    </TouchableOpacity>
+                </MapView> : <Text>Loading....</Text>}
+                <View style={{}}>
+            <View style={{padding:15,width:300,flexDirection:'row',borderRadius:15}}>
+                <View style={{flexDirection:'column',borderWidth:1,borderRadius:15,borderColor:'#5e17eb',padding:10}}>
+                  <Text style={{padding:5,fontFamily:'bebas'}}>From: {route.params.user.citizenUsername}</Text>
+                  <Text style={{padding:5,fontFamily:'bebas'}}>Trash location: {route.params.citizenGeoLocation}</Text>
+                  <Text style={{padding:5,fontFamily:'bebas'}}>Your location: {route.params.collectorGeoLocation}</Text>
                 </View>
+
+            </View>
+            <TouchableOpacity style={{padding:10,fontFamily:'bebas',alignSelf:'center',borderWidth:1,borderColor:'#5e17eb',borderRadius:15,backgroundColor:'#5e17eb',width:'80%'}} onPress={handleCollected}>
+                <Text style={{fontFamily:'bebas',color:'white',alignSelf:'center'}}>Collected</Text>
+            </TouchableOpacity>
+
+            </View>
             </View>
         </View>
     )

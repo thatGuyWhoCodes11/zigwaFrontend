@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
-import { Button } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import LoadingAnimation from "../LoadingAnimation";
+import { useFonts } from 'expo-font'
+
 
 export default function History({ navigation, route }) {
     const [users, setUsers] = useState([])
@@ -34,17 +35,40 @@ export default function History({ navigation, route }) {
         else if(users[i].status==='complete')
             navigation.navigate('Result',{username:users[i].citizenUsername,location:citizenGeoLocations[i],collectorUsername:users[i].collectorUsername,image_name:users[i].image_name})
     }
+
+    let [fontsLoaded] = useFonts({
+        'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
+      });
+      if (!fontsLoaded) {
+        return <LoadingAnimation />;
+      }
+
     return (
-        <View>
+        <View style={{backgroundColor:'white',flex:1}}>
             {(users[0]!=0) ?
-                <ScrollView>
+                <ScrollView style={{padding:20}}>
                     {users.map((e, i) =>
-                    (<View key={i} style={{ alignItems: 'center' }} >
-                        <Text>the guy who reported the trash: {e.citizenUsername}</Text>
-                        <Text>his location: {citizenGeoLocations[i]}</Text>
-                        <Text>status: {e.status}</Text>
-                        <Button title="details" onPress={() => handleDetails(i)} />
-                    </View>))}
+                    (<View style={{padding:10}}>
+
+
+                        <View key={i} style={{ alignItems: 'center',borderWidth:1,padding:15,borderRadius:15,borderColor:'#5e17eb' }} >
+                          <Text style={{fontFamily:'bebas',fontSize:15,padding:5}}>The Person who reported the trash: {e.citizenUsername}</Text>
+                          <Text style={{fontFamily:'bebas',fontSize:15,padding:5}}>Location: {citizenGeoLocations[i]}</Text>
+                          <Text style={{fontFamily:'bebas',fontSize:15,padding:10}}>Status: {e.status}</Text>
+                          <View style={{padding:15}}> 
+                            <TouchableOpacity onPress={() => handleDetails(i)} style={{alignSelf:'center',padding:20,borderWidth:1,borderColor:'#5e17eb',backgroundColor:'#5e17eb',width:'75%',borderRadius:15}}>
+                              <Text style={{color:'white',fontFamily:'bebas',alignSelf:'center'}}>Details</Text>
+                           </TouchableOpacity>
+
+                        </View>
+
+                       </View>
+
+                    </View>
+
+                    ))}
+
+
                 </ScrollView> : <LoadingAnimation />}
         </View>
     )
