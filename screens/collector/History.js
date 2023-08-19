@@ -32,7 +32,7 @@ export default function History({ navigation, route }) {
         if(users[i].status==='accepted - onGoing')
             navigation.navigate('Accept_details', params)
         else if(users[i].status==='complete')
-            navigation.navigate('Result',{username:users[i].citizenUsername,location:citizenGeoLocations[i],collectorUsername:users[i].collectorUsername})
+            navigation.navigate('Result',{username:users[i].citizenUsername,location:citizenGeoLocations[i],collectorUsername:users[i].collectorUsername,image_name:users[i].image_name})
     }
     return (
         <View>

@@ -7,6 +7,7 @@ import Sign_Up from './screens/Sign_Up';
 import Sign_In from './screens/Sign_In';
 import CitizenDrawer from './screens/CitizenDrawer';
 import CollectorStack from './screens/CollectorStack';
+import ScrapDealerStack from './screens/ScrapDealerStack';
 const stack = createStackNavigator()
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <stack.Screen name='Sign_In' component={Sign_In} options={{ title: "", headerTransparent: true }} />
         <stack.Screen name='CollectorStack' component={CollectorStack} />
         <stack.Screen name='CitizenDrawer' component={CitizenDrawer}  />
+        <stack.Screen name='ScrapDealerStack' component={ScrapDealerStack} />
       </stack.Navigator>
     </NavigationContainer>
   );

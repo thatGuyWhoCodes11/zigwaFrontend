@@ -28,7 +28,7 @@ export default function Sign_In({ navigation }) {
                         navigation.navigate('CitizenDrawer', { params: res.data.userData })
                         break;
                     case 'scrapDealer':
-                        navigation.navigate('scrapDealerDrawer')
+                        navigation.navigate('ScrapDealerStack', res.data.userData)
                         break;
                     case 'collector':
                         navigation.navigate('CollectorStack', { params: res.data.userData })

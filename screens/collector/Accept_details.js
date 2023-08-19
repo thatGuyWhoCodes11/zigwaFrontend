@@ -36,7 +36,7 @@ export default function Accept_details({navigation,route}) {
     async function handleCollected(){
         const res=await axios.put(`https://zigwa.cleverapps.io/transactions?id=${route.params.user._id}&updatedStatus=complete`)//updating status in server
         if(res.data.errorCode==0)
-            navigation.navigate('Result',{username:route.params.user.citizenUsername,location:route.citizenGeoLocation,collectorUsername:route.params.user.collectorUsername})
+            navigation.navigate('Result',{username:route.params.user.citizenUsername,location:route.citizenGeoLocation,collectorUsername:route.params.user.collectorUsername,image_name:route.params.user.image_name})
         else{
             Alert.alert('something went wrong')
         }

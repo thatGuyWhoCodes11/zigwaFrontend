@@ -3,12 +3,14 @@ import { useEffect, useMemo, useState } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from 'expo-location'
-export default function Reports({ navigation,route }) {
+import LoadingAnimation from '../LoadingAnimation'
+export default function Reports({ navigation, route }) {
     const [coords, setCoords] = useState(route?.params.coords || null)
     const [path, setPath] = useState([])
     const [userName, setUserName] = useState()
     const [image, setImage] = useState()
-    const [userGeoLocation,setUserGeoLocation]=useState()
+    const [userGeoLocation, setUserGeoLocation] = useState()
+    const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
         (async () => {
             try {
@@ -47,36 +49,41 @@ export default function Reports({ navigation,route }) {
                     setImage(e.buffer)
                 }
             })
+        setIsLoading(false)
         })()
         return;
     }, [coords])
-    function handleCollected(){
-        navigation.navigate('Result',{username:userName,location:userGeoLocation,collectorUsername:route.params.collectorUserName,image:image})
+    function handleCollected() {
+        navigation.navigate('Result', { username: userName, location: userGeoLocation, collectorUsername: route.params.collectorUserName, image: image, image_name: route.params.image_name })
     }
     return (
-        <View>
-            {(coords && path) ? <MapView style={{ height: '60%', width: '100%' }} showsUserLocation initialRegion={{
-                latitudeDelta: 0.01990,
-                longitudeDelta: 0.5,
-                latitude: coords.latitude,
-                longitude: coords.longitude
-            }}>
-                <Polyline
-                    coordinates={(path.map(([latitude, longitude]) => ({ latitude, longitude })))}
-                    strokeColor="#000" // Change this to your preferred color
-                    strokeWidth={4}
-                />
-                <Marker coordinate={{ latitude: (coords.latitude), longitude: (coords.longitude) }} />
-            </MapView> : <Text>loading....</Text>}
-            <View>
-                <Text>from: {userName}</Text>
-                <Text>trash location: {route.params.geoLocation}</Text>
-                <Text>your location: {userGeoLocation}</Text>
-                <Image source={{ uri: 'data:image/png;base64,' + image }} style={{ height: 100, width: 100 }} />
-                <TouchableOpacity onPress={handleCollected}>
-                    <Text>collected</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        <>
+            {isLoading ?
+                <LoadingAnimation/> : <View>
+                    {(coords && path) ? <MapView style={{ height: '60%', width: '100%' }} showsUserLocation initialRegion={{
+                        latitudeDelta: 0.01990,
+                        longitudeDelta: 0.5,
+                        latitude: coords.latitude,
+                        longitude: coords.longitude
+                    }}>
+                        <Polyline
+                            coordinates={(path.map(([latitude, longitude]) => ({ latitude, longitude })))}
+                            strokeColor="#000" // Change this to your preferred color
+                            strokeWidth={4}
+                        />
+                        <Marker coordinate={{ latitude: (coords.latitude), longitude: (coords.longitude) }} />
+                    </MapView> : <Text>loading....</Text>}
+                    <View>
+                        <Text>from: {userName}</Text>
+                        <Text>trash location: {route.params.geoLocation}</Text>
+                        <Text>your location: {userGeoLocation}</Text>
+                        <Image source={{ uri: 'data:image/png;base64,' + image }} style={{ height: 100, width: 100 }} />
+                        <TouchableOpacity onPress={handleCollected}>
+                            <Text>collected</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            }
+        </>
     )
 }

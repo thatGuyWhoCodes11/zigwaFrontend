@@ -52,6 +52,7 @@ export default function Home({ route, navigation }) {
         return;
     }, [])
     async function HandleAccept(i) {
+        setIsLoading(true)
         const { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== 'granted') {
             Alert.alert('warning, cannot function without location perms, please allow location')
@@ -64,14 +65,16 @@ export default function Home({ route, navigation }) {
             const target = citizens.find((e) => (e.location.latitude == coords[i].latitude))
             formData.append('citizenUsername', target.username)
             formData.append('collectorUsername', route.params.username)
+            formData.append('image_name',users[i].image_name)
             axios.post('https://zigwa.cleverapps.io/transactions', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
                 if (res.data?.errorCode == 0) {
-                    navigation.navigate('Reports', { coords: coords[i], users: users, geoLocation: userGeoLocation[i], collectorUserName: route.params.username })
+                    navigation.navigate('Reports', { coords: coords[i], users: users, geoLocation: userGeoLocation[i], collectorUserName: route.params.username,image_name:users[i].image_name })
                 } else {
                     Alert.alert('something went wrong!')
                 }
             }).catch((err) => { console.log(err); Alert.alert('error: connnection error, make sure you are connected to internet') })
         }
+        setIsLoading(false)
     }
     async function handleCancel(index) {
         const formData = new FormData
