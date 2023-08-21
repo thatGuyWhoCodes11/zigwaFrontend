@@ -3,22 +3,21 @@ import { useFonts } from 'expo-font'
 import LoadingAnimation from "../LoadingAnimation";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Result({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(true)
   const [image, setImage] = useState()
-  const [descripition, setDescription] = useState()
+  const [description, setDescription] = useState()
   useEffect(() => {
     (async () => {
       res = await axios.get(`https://zigwa.cleverapps.io/location?image_name=${route.params.image_name}`);
-      console.log(res.data.doc)
-      if (res.data.errorCode != 0)
+      if (res.data.errorCode == 0)
         if (res.data.doc.length != 0)
           setImage(res.data.doc[0].buffer)
       setIsLoading(false)
     })()
-  })
-  console.log(route.params.image_name)
+  }, [useIsFocused])
   let [fontsLoaded] = useFonts({
     'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
   });
@@ -31,7 +30,7 @@ export default function Result({ route, navigation }) {
     formData.append('citizenUsername', route.params.username)
     formData.append('collectorUsername', route.params.collectorUsername)
     formData.append('image_name', route.params.image_name)
-    formData.append('descripition', descripition)
+    formData.append('description', description)
     console.log(formData)
     try {
       res = await axios.post('https://zigwa.cleverapps.io/notifications', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -57,7 +56,7 @@ export default function Result({ route, navigation }) {
             <Text style={{ fontFamily: 'bebas', fontSize: 25, padding: 20, alignSelf: 'center' }}>Thank you for your support!</Text>
           </View>
           <View style={{ padding: 15 }}>
-            <Image source={{ uri: 'data:img/png;base64,' + route.params.image }} style={{ height: 250, width: 250, alignSelf: 'center', borderRadius: 15 }} />
+            <Image source={{ uri: 'data:img/png;base64,' + image }} style={{ height: 250, width: 250, alignSelf: 'center', borderRadius: 15 }} />
           </View>
           <View style={{ padding: 20, borderWidth: 1, borderRadius: 15, borderColor: '#5e17eb', width: 350, alignSelf: "center" }}>
             <Text style={{ padding: 10, fontFamily: 'bebas', fontSize: 15 }}>Collected from: {route.params.location}</Text>

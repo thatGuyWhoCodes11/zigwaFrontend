@@ -5,6 +5,7 @@ import Reports from './collector/Reports';
 import Result from './collector/Result';
 import History from './collector/History';
 import Accept_details from './collector/Accept_details';
+import Notifications from './collector/Notifications';
 const stack = createStackNavigator()
 
 export default function CollectorStack({ route }) {
@@ -15,6 +16,7 @@ export default function CollectorStack({ route }) {
             <stack.Screen name='Result' component={Result} />
             <stack.Screen name='History' component={History} />
             <stack.Screen name='Accept_details' component={Accept_details} />
+            <stack.Screen name='Notifications' component={Notifications} />
         </stack.Navigator>
     )
 }

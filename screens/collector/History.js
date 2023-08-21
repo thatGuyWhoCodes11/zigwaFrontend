@@ -30,39 +30,39 @@ export default function History({ navigation, route }) {
     }, [])
     function handleDetails(i) {
         const params = { user: users[i], citizenGeoLocation: citizenGeoLocations[i], collectorGeoLocation: collectorGeoLocations[i] }
-        if(users[i].status==='accepted - onGoing')
+        if (users[i].status === 'accepted - onGoing')
             navigation.navigate('Accept_details', params)
-        else if(users[i].status==='complete')
-            navigation.navigate('Result',{username:users[i].citizenUsername,location:citizenGeoLocations[i],collectorUsername:users[i].collectorUsername,image_name:users[i].image_name})
+        else if (users[i].status === 'complete')
+            navigation.navigate('Result', { username: users[i].citizenUsername, location: citizenGeoLocations[i], collectorUsername: users[i].collectorUsername, image_name: users[i].image_name })
     }
 
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
-      });
-      if (!fontsLoaded) {
+    });
+    if (!fontsLoaded) {
         return <LoadingAnimation />;
-      }
+    }
 
     return (
-        <View style={{backgroundColor:'white',flex:1}}>
-            {(users[0]!=0) ?
-                <ScrollView style={{padding:20}}>
+        <View style={{ backgroundColor: 'white', flex: 1 }}>
+            {(users[0] != 0) ?
+                <ScrollView style={{ padding: 20 }}>
                     {users.map((e, i) =>
-                    (<View style={{padding:10}}>
+                    (<View key={i} style={{ padding: 10 }}>
 
 
-                        <View key={i} style={{ alignItems: 'center',borderWidth:1,padding:15,borderRadius:15,borderColor:'#5e17eb' }} >
-                          <Text style={{fontFamily:'bebas',fontSize:15,padding:5}}>The Person who reported the trash: {e.citizenUsername}</Text>
-                          <Text style={{fontFamily:'bebas',fontSize:15,padding:5}}>Location: {citizenGeoLocations[i]}</Text>
-                          <Text style={{fontFamily:'bebas',fontSize:15,padding:10}}>Status: {e.status}</Text>
-                          <View style={{padding:15}}> 
-                            <TouchableOpacity onPress={() => handleDetails(i)} style={{alignSelf:'center',padding:20,borderWidth:1,borderColor:'#5e17eb',backgroundColor:'#5e17eb',width:'75%',borderRadius:15}}>
-                              <Text style={{color:'white',fontFamily:'bebas',alignSelf:'center'}}>Details</Text>
-                           </TouchableOpacity>
+                        <View style={{ alignItems: 'center', borderWidth: 1, padding: 15, borderRadius: 15, borderColor: '#5e17eb' }} >
+                            <Text style={{ fontFamily: 'bebas', fontSize: 15, padding: 5 }}>The Person who reported the trash: {e.citizenUsername}</Text>
+                            <Text style={{ fontFamily: 'bebas', fontSize: 15, padding: 5 }}>Location: {citizenGeoLocations[i]}</Text>
+                            <Text style={{ fontFamily: 'bebas', fontSize: 15, padding: 10 }}>Status: {e.status}</Text>
+                            <View style={{ padding: 15 }}>
+                                <TouchableOpacity onPress={() => handleDetails(i)} style={{ alignSelf: 'center', padding: 20, borderWidth: 1, borderColor: '#5e17eb', backgroundColor: '#5e17eb', width: '75%', borderRadius: 15 }}>
+                                    <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center' }}>Details</Text>
+                                </TouchableOpacity>
+
+                            </View>
 
                         </View>
-
-                       </View>
 
                     </View>
 

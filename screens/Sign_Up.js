@@ -98,7 +98,9 @@ export default function Sign_Up({ navigation }) {
   if (!fontsLoaded) {
     return <LoadingAnimation />;
   }
-
+  function handleBank(){
+    navigation.navigate('Bank',{test:'testuisdjkghskdh'})
+  }
   return (
 
     <View style={styles.container}>
@@ -142,6 +144,9 @@ export default function Sign_Up({ navigation }) {
             </View>
             <View style={styles.button}>
               <Button color='#5e17eb' title='sign in instead' onPress={() => navigation.navigate('Sign_In')} />
+            </View>
+            <View>
+              <Button title='link bank account' onPress={handleBank} />
             </View>
           </ScrollView>
         </View>

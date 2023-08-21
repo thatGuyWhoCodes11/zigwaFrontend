@@ -4,6 +4,7 @@ import { Button, Image, ScrollView, Text, View, TouchableOpacity, Alert, StyleSh
 import * as Location from 'expo-location'
 import LoadingAnimation from '../LoadingAnimation';
 import { useFonts } from 'expo-font'
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Home({ route, navigation }) {
     const [users, setUsers] = useState([])
@@ -19,21 +20,26 @@ export default function Home({ route, navigation }) {
                     let location = []
                     setCitizens(res.data.doc)
                     res.data.doc.forEach(async (e) => {
-                        const res = await axios.get(`https://zigwa.cleverapps.io/transactions?citizenUsername=${e.username}`)
-                        const resIgnore = await axios.get(`https://zigwa.cleverapps.io/ignore?collectorUsername=${route.params.username}&imageName=${e.image_name}`)
-                        const res2 = await axios.get(`https://api.maptiler.com/geocoding/${e.location.longitude},${e.location.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
+                        const res = await axios.get(`https://zigwa.cleverapps.io/transactions?citizenUsername=${e.username}`) //get an array of transactions for a speicifed user
+                        const resIgnore = await axios.get(`https://zigwa.cleverapps.io/ignore?collectorUsername=${route.params.username}&imageName=${e.image_name}`) //get an array of an ignore list for a specified user and a specified image
+                        const res2 = await axios.get(`https://api.maptiler.com/geocoding/${e.location.longitude},${e.location.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`) //get geoLocation
                         if (res.data.userData.length != 0) {
-                            res.data.userData.forEach((e2, i) => {
-                                if ((e2.citizenLocation.latitude !== e.location.latitude) && (resIgnore.data.errorCode != 0)) {
-                                    location.push(e.location);
-                                    setUsers(prev => [...prev, e])
-                                    const { features: [{ place_name }] } = res2.data
-                                    setUserGeoLocation(prev => [...prev, place_name])
-                                    setCoords(location)
+                            let flag = true
+                            res.data.userData.some((e2) => {
+                                if (!((e2.citizenLocation.latitude !== e.location.latitude) && (resIgnore.data.errorCode != 0))) {
+                                    flag = false
+                                    return true;
                                 }
                             })
-                        } else {
-                            console.log('print!')
+                            if (flag == true) {
+                                location.push(e.location);
+                                setUsers(prev => [...prev, e])
+                                const { features: [{ place_name }] } = res2.data
+                                setUserGeoLocation(prev => [...prev, place_name])
+                                setCoords(location)
+                            }
+                        }
+                        else {
                             if ((resIgnore.data.errorCode != 0)) {
                                 location.push(e.location);
                                 setUsers(prev => [...prev, e])
@@ -49,7 +55,8 @@ export default function Home({ route, navigation }) {
                 setIsLoading(false)
             })()
         } catch (err) { alert(JSON.stringify(err)); console.log(err) }
-    }, [])
+    }, [useIsFocused])
+    console.log(users.map((e) => (e.location.latitude)))
     async function HandleAccept(i) {
         setIsLoading(true)
         const { status } = await Location.requestForegroundPermissionsAsync()
@@ -131,6 +138,7 @@ export default function Home({ route, navigation }) {
             <TouchableOpacity style={{ padding: 20, alignSelf: 'center', backgroundColor: '#5e17eb', width: '70%', borderRadius: 15 }}>
                 <Text style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 20 }} onPress={() => navigation.navigate('History')}>History</Text>
             </TouchableOpacity>
+            <Button title='notifications' onPress={()=>navigation.navigate('Notifications')} />
             <Text style={{ padding: 10, fontFamily: 'bebas', fontSize: 20, alignSelf: 'center' }}>Credits:</Text>
         </View>
     )

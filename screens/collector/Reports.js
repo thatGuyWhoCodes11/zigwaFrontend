@@ -5,6 +5,7 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from 'expo-location'
 import { useFonts } from 'expo-font'
 import LoadingAnimation from "../LoadingAnimation";
+import { useIsFocused } from "@react-navigation/native";
 export default function Reports({ navigation,route }) {
     const [coords, setCoords] = useState(route?.params.coords || null)
     const [path, setPath] = useState([])
@@ -51,9 +52,10 @@ export default function Reports({ navigation,route }) {
                 }
             })
         setIsLoading(false)
+        console.log('finished!')
         })()
         return;
-    }, [coords])
+    }, [useIsFocused])
     function handleCollected() {
         navigation.navigate('Result', { username: userName, location: userGeoLocation, collectorUsername: route.params.collectorUserName, image: image, image_name: route.params.image_name })
     }
