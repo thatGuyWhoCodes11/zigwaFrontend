@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, Text, TouchableOpacity, Image, Modal } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Modal, Alert } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location'
@@ -7,38 +7,31 @@ import { useFonts } from 'expo-font'
 import * as ImagePicker from 'expo-image-picker'
 import axios from 'axios';
 import LoadingAnimation from '../LoadingAnimation';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Citizen({ route, navigation }) {
+  const [isLoading, setIsLoading] = useState(true)
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 })
+  const [locationStatus, setLocationStatus] = useState(false)
   //handle location from user
   useEffect(() => {
-    const getLocation = async () => {
+    (async () => {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          console.log('Please accept location permissions');
-        } else {
+        if (status != 'granted') {
+          console.log('Please accept location permissions'); Alert.alert('location is required!');
+        }
+        else {
           const location = await Location.getCurrentPositionAsync({});
-          setLocation({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          });
+          setLocation({ latitude: location.coords.latitude, longitude: location.coords.longitude });
+          setLocationStatus(true)
         }
       } catch (error) {
         console.error(error);
       }
-    };
-    getLocation();
-  }, [loadLocation]);
-  const [location, setLocation] = useState(null)
-  const mapRef = useRef()
-  function loadLocation() {
-    mapRef.current.animateToRegion({
-      latitude: location?.latitude || 0,
-      longitude: location?.longitude || 0,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.02
-    })
-  }
+      setIsLoading(false)
+    })()
+  }, [useIsFocused]);
   //end of handling location and beginning of handling camera
   const [userImage, setUserImage] = useState('')
   const [imageModal, setImageModal] = useState(false)
@@ -93,62 +86,65 @@ export default function Citizen({ route, navigation }) {
     return <LoadingAnimation />;
   }
   return (
-    <View style={styles.all}>
-      {(location?.latitude) ? <MapView
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={{
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001,
-          latitude: (location?.latitude),
-          longitude: (location?.longitude)
-        }
-        }
-        showsUserLocation={true}
-        followsUserLocation={true}
-      >
-      </MapView> : <LoadingAnimation />}
-      <View>
-        <View style={{ height: 1, width: 1 }}>
-          <Image style={styles.nav} source={require('../../images/navbar.png')} />
-        </View>
+    <>{isLoading ? <LoadingAnimation /> :
+      <View style={styles.all}>
+        <>{locationStatus ? 
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitudeDelta: 0.001,
+              longitudeDelta: 0.001,
+              latitude: (location.latitude),
+              longitude: (location.longitude)
+            }
+            }
+            showsUserLocation={true}
+            followsUserLocation={true}
+          >
+          </MapView>:<Text>Location been denied</Text>}
+        </>
         <View>
-          <TouchableOpacity style={{ alignSelf: 'center', elevation: 20 }} onPress={handleImage}>
-            <Image style={styles.cam} source={require('../../images/3178179.png')} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.mapdownbar}>
-          <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', padding: 20, fontSize: 18, bottom: 80 }}>Found trash? Take a Snap!</Text>
-          <View style={{ bottom: 80 }}>
-            <TouchableOpacity style={{ alignSelf: 'center', backgroundColor: 'white', borderRadius: 20, padding: 15 }} onPress={loadLocation}>
-              <Text style={{ fontFamily: 'bebas' }}>Get location</Text>
+          <View style={{ height: 1, width: 1 }}>
+            <Image style={styles.nav} source={require('../../images/navbar.png')} />
+          </View>
+          <View>
+            <TouchableOpacity style={{ alignSelf: 'center', elevation: 20 }} onPress={handleImage}>
+              <Image style={styles.cam} source={require('../../images/3178179.png')} />
             </TouchableOpacity>
           </View>
-        </View>
-        {imageModal &&
-          <Modal>
-            <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: '#5e17eb' }}>
-              <Text style={{ fontSize: 25, fontFamily: 'bebas' }}>Here's your snap!</Text>
+          <View style={styles.mapdownbar}>
+            <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', padding: 20, fontSize: 18, bottom: 80 }}>Found trash? Take a Snap!</Text>
+            <View style={{ bottom: 80 }}>
+              {/* <TouchableOpacity style={{ alignSelf: 'center', backgroundColor: 'white', borderRadius: 20, padding: 15 }} onPress={loadLocation}>
+                <Text style={{ fontFamily: 'bebas' }}>Get location</Text>
+              </TouchableOpacity> */}
             </View>
-            <View style={{ padding: 10 }}>
-              <Text style={{ fontSize: 20, fontFamily: 'bebas' }}>The Image: </Text>
-            </View>
-            <View style={{}}>
-              <Image source={userImage} style={{ height: 300, width: 300, right: 0, margin: 30, borderRadius: 15, bottom: 10, alignSelf: 'center' }} />
-            </View>
-            <View style={{ padding: 10 }}>
-              <Text style={{ fontSize: 20, fontFamily: 'bebas' }} >Location: {geoLocation}</Text>
-            </View>
-            <TouchableOpacity onPress={sendImage} style={{ backgroundColor: '#5e17eb', margin: 20, padding: 10, borderRadius: 15 }}>
-              <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', fontSize: 15 }}>Send</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ backgroundColor: '#5e17eb', margin: 20, padding: 10, borderRadius: 15 }} onPress={() => { setImageModal(false) }}>
-              <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', fontSize: 15 }}>Cancel</Text>
-            </TouchableOpacity>
+          </View>
+          {imageModal &&
+            <Modal>
+              <View style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: '#5e17eb' }}>
+                <Text style={{ fontSize: 25, fontFamily: 'bebas' }}>Here's your snap!</Text>
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text style={{ fontSize: 20, fontFamily: 'bebas' }}>The Image: </Text>
+              </View>
+              <View style={{}}>
+                <Image source={userImage} style={{ height: 300, width: 300, right: 0, margin: 30, borderRadius: 15, bottom: 10, alignSelf: 'center' }} />
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text style={{ fontSize: 20, fontFamily: 'bebas' }} >Location: {geoLocation}</Text>
+              </View>
+              <TouchableOpacity onPress={sendImage} style={{ backgroundColor: '#5e17eb', margin: 20, padding: 10, borderRadius: 15 }}>
+                <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', fontSize: 15 }}>Send</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ backgroundColor: '#5e17eb', margin: 20, padding: 10, borderRadius: 15 }} onPress={() => { setImageModal(false) }}>
+                <Text style={{ color: 'white', fontFamily: 'bebas', alignSelf: 'center', fontSize: 15 }}>Cancel</Text>
+              </TouchableOpacity>
 
-          </Modal>}
-      </View>
-    </View>
+            </Modal>}
+        </View>
+      </View>}
+    </>
   )
 }
 const styles = StyleSheet.create({

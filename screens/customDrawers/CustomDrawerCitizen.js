@@ -22,7 +22,7 @@ export default function CustomDrawerCitizen({route,...props}) {
                 <View style={styles.texts}>
                     
                     <Text style={{fontFamily:'bebas',fontSize:20}}>{route.params.params.name}</Text>
-                    <Text style={{fontFamily:'bebas',fontSize:20}}>credits: 100</Text>
+                    <Text style={{fontFamily:'bebas',fontSize:20}}>credits: {route.params.params.credits}</Text>
                 </View>
                 <View style={{bottom:80}}>
                   <DrawerItemList {...props} />

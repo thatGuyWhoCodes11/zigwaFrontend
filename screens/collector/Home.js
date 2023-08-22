@@ -139,7 +139,7 @@ export default function Home({ route, navigation }) {
                 <Text style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 20 }} onPress={() => navigation.navigate('History')}>History</Text>
             </TouchableOpacity>
             <Button title='notifications' onPress={()=>navigation.navigate('Notifications')} />
-            <Text style={{ padding: 10, fontFamily: 'bebas', fontSize: 20, alignSelf: 'center' }}>Credits:</Text>
+            <Text style={{ padding: 10, fontFamily: 'bebas', fontSize: 20, alignSelf: 'center' }}>Credits: {route.params.credits}</Text>
         </View>
     )
 }
