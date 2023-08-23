@@ -5,7 +5,6 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from 'expo-location'
 import { useFonts } from 'expo-font'
 import LoadingAnimation from "../LoadingAnimation";
-import { useIsFocused } from "@react-navigation/native";
 export default function Reports({ navigation,route }) {
     const [coords, setCoords] = useState(route?.params.coords || null)
     const [path, setPath] = useState([])
@@ -55,7 +54,7 @@ export default function Reports({ navigation,route }) {
         console.log('finished!')
         })()
         return;
-    }, [useIsFocused])
+    }, [])
     function handleCollected() {
         navigation.navigate('Result', { username: userName, location: userGeoLocation, collectorUsername: route.params.collectorUserName, image: image, image_name: route.params.image_name })
     }
@@ -63,9 +62,6 @@ export default function Reports({ navigation,route }) {
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
       });
-      if (!fontsLoaded) {
-        return <LoadingAnimation />;
-      }
     return (
         <>
             {isLoading ?

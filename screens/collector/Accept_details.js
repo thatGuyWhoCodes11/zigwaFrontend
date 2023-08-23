@@ -5,7 +5,6 @@ import * as Location from 'expo-location'
 import axios from "axios"
 import { useFonts } from 'expo-font'
 import LoadingAnimation from "../LoadingAnimation";
-import { useIsFocused } from "@react-navigation/native"
 export default function Accept_details({navigation,route}) {
     const [coords, setCoords] = useState()
     const [path, setPath] = useState()
@@ -35,7 +34,7 @@ export default function Accept_details({navigation,route}) {
                 setPath(response.data.route.geometry.coordinates)
             }
         })()
-    },[useIsFocused])
+    },[])
     async function handleCollected(){
         console.log(route.params)
         const res=await axios.put(`https://zigwa.cleverapps.io/transactions?id=${route.params.user._id}&updatedStatus=complete`)//updating status in server
@@ -50,9 +49,6 @@ export default function Accept_details({navigation,route}) {
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
       });
-      if (!fontsLoaded) {
-        return <LoadingAnimation />;
-      }
     return (
         <View>
             <View>

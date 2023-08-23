@@ -45,13 +45,10 @@ export default function Sign_In({ navigation }) {
     let [fontsLoaded] = useFonts({
         'bebas': require('../assets/fonts/BebasNeue-Regular.ttf')
     });
-    if (!fontsLoaded) {
-        return <LoadingAnimation />;
-    }
-
     return (
         <ImageBackground style={styles.cover} source={require('../images/welb.jpeg')}>
             {isLoading && <LoadingAnimation/>}
+            {fontsLoaded ?
             <View style={styles.all}>
                 <View style={styles.box}>
                     <View>
@@ -70,7 +67,7 @@ export default function Sign_In({ navigation }) {
                         <Button color='#5e17eb' title="sign up instead" onPress={() => navigation.goBack()} />
                     </View>
                 </View>
-            </View>
+            </View>: <LoadingAnimation/>}
         </ImageBackground>
     )
 }

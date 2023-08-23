@@ -3,7 +3,6 @@ import { useFonts } from 'expo-font'
 import LoadingAnimation from "../LoadingAnimation";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
 
 export default function Result({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -17,13 +16,10 @@ export default function Result({ route, navigation }) {
           setImage(res.data.doc[0].buffer)
       setIsLoading(false)
     })()
-  }, [useIsFocused])
+  }, [])
   let [fontsLoaded] = useFonts({
     'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
   });
-  if (!fontsLoaded) {
-    return <LoadingAnimation />;
-  }
   async function handleButton() {
     setIsLoading(true)
     const formData = new FormData

@@ -39,9 +39,6 @@ export default function History({ navigation, route }) {
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
     });
-    if (!fontsLoaded) {
-        return <LoadingAnimation />;
-    }
 
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>

@@ -7,9 +7,6 @@ export default function Account({ route }) {
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
       });
-      if (!fontsLoaded) {
-        return <LoadingAnimation />;
-      }
 
     return (
         <View style={{ top:100,display:'flex',padding:15 }}>

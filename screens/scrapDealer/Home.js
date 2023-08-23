@@ -1,4 +1,4 @@
-import { useIsFocused } from "@react-navigation/native";
+import {  } from "@react-navigation/native";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Alert, Button, Image, ScrollView, Text, View } from "react-native";
@@ -40,12 +40,12 @@ export default function Home({ route, navigation }) {
                 console.log(res.data)
             }
         })()
-    }, [useIsFocused])
+    }, [])
     function handleDetails(i) {
         navigation.navigate('Details', { image: images_requests[i], citizenUsername: requests[i].citizenUsername, collectorUsername: requests[i].collectorUsername, description: requests[i].description, scrapUsername: route.params.username, _id: requests[i]._id })
     }
     function handleReceived(i) {
-        navigation.navigate('Received', { image: images_orders[i], citizenUsername: orders[i].citizenUsername, collectorUsername: orders[i].collectorUsername, scrapUsername: route.params.username, _id: orders[i]._id })
+        navigation.navigate('Received', { image: images_orders[i], citizenUsername: orders[i].citizenUsername, collectorUsername: orders[i].collectorUsername, scrapUsername: route.params.username, _id: orders[i]._id,image_name:requests[i].image_name })
     }
     return (
         <View>

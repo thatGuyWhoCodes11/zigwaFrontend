@@ -8,15 +8,25 @@ export default function Received({ navigation, route }) {
     const [credits, setCredits] = useState()
     const [isLoading, setIsLoading] = useState(false)
     function handlePress() {
-        console.log(credits)
         setIsLoading(true)
         if (credits)
             axios.put(`https://zigwa.cleverapps.io/updateCredits?credits=${credits}&citizenUsername=${route.params.citizenUsername}&collectorUsername=${route.params.collectorUsername}`).then((res) => {
                 if (res.data.errorCode == 0)
-                    axios.put(`https://zigwa.cleverapps.io/notifications?completed=yes&_id=${route.params._id}`).then((res) => {
-                        if (res.data.errorCode == 0)
-                            setIsLoading(false); navigation.goBack(); Alert.alert('success!')
-                    })
+                    axios.put(`https://zigwa.cleverapps.io/notifications?completed=yes&_id=${route.params._id}`).then(async () => {
+                        const res2 = await axios.get('https://zigwa.cleverapps.io/transactions')
+                        res2.data.userData.some((e, i) => {
+                            if (e.image_name === route.params.image_name) {
+                                console.log(e._id)
+                                axios.put(`https://zigwa.cleverapps.io/updateStatus?status=sent-credits&_id=${e._id}`).then(() => {
+                                    setIsLoading(false)
+                                    navigation.goBack()
+                                    Alert.alert('success!')
+                                })
+                                return true;
+                            }
+                        })
+                    }
+                    )
             })
         else
             Alert.alert('credits field is required :skull:'); setIsLoading(false)

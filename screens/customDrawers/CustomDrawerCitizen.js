@@ -9,9 +9,6 @@ export default function CustomDrawerCitizen({route,...props}) {
     let [fontsLoaded] = useFonts({
         'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
       });
-      if (!fontsLoaded) {
-        return <LoadingAnimation />;
-      }
 
     return (
         <View style={{ flex: 1 }}>

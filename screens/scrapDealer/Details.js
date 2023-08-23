@@ -7,6 +7,7 @@ import LoadingAnimation from "../LoadingAnimation";
 export default function Details({ route, navigation }) {
     const [isLoading, setIsLoading] = useState(false)
     const [address, setAddress] = useState('')
+    console.log(route.params)
     function handlePress() {
         if (!address) {
             Alert.alert('address is required')
@@ -24,10 +25,10 @@ export default function Details({ route, navigation }) {
                     navigation.goBack()
                 }
                 else
-                    Alert.alert('an error happened!')
+                    Alert.alert('an error happened!');
             }
             else
-                Alert.alert('an error happened!')
+                Alert.alert('an error happened!');
         })
         setIsLoading(false)
     }

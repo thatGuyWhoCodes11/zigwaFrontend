@@ -4,7 +4,6 @@ import { Button, Image, ScrollView, Text, View, TouchableOpacity, Alert, StyleSh
 import * as Location from 'expo-location'
 import LoadingAnimation from '../LoadingAnimation';
 import { useFonts } from 'expo-font'
-import { useIsFocused } from '@react-navigation/native';
 
 export default function Home({ route, navigation }) {
     const [users, setUsers] = useState([])
@@ -55,7 +54,7 @@ export default function Home({ route, navigation }) {
                 setIsLoading(false)
             })()
         } catch (err) { alert(JSON.stringify(err)); console.log(err) }
-    }, [useIsFocused])
+    }, [])
     console.log(users.map((e) => (e.location.latitude)))
     async function HandleAccept(i) {
         setIsLoading(true)
@@ -85,7 +84,6 @@ export default function Home({ route, navigation }) {
         }
         setIsLoading(false)
     }
-
     async function handleCancel(index) {
         const formData = new FormData
         formData.append('imageName', citizens[index].image_name)
@@ -106,7 +104,7 @@ export default function Home({ route, navigation }) {
     });
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
-            {isLoading && fontsLoaded && <LoadingAnimation />}
+            {(isLoading && fontsLoaded) && <LoadingAnimation />}
             <View>
                 <Text style={styles.welbak}>Welcome back! {route.params.name} </Text>
             </View>
@@ -135,10 +133,10 @@ export default function Home({ route, navigation }) {
                     })}
                 </ScrollView>
             </View>
-            <TouchableOpacity style={{ padding: 20, alignSelf: 'center', backgroundColor: '#5e17eb', width: '70%', borderRadius: 15 }}>
-                <Text style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 20 }} onPress={() => navigation.navigate('History')}>History</Text>
+            <TouchableOpacity style={{ padding: 20, alignSelf: 'center', backgroundColor: '#5e17eb', width: '70%', borderRadius: 15 }} onPress={() => (navigation.navigate('History'))}>
+                <Text style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 20 }} >History</Text>
             </TouchableOpacity>
-            <Button title='notifications' onPress={()=>navigation.navigate('Notifications')} />
+            <Button title='notifications' onPress={() => navigation.navigate('Notifications')} />
             <Text style={{ padding: 10, fontFamily: 'bebas', fontSize: 20, alignSelf: 'center' }}>Credits: {route.params.credits}</Text>
         </View>
     )

@@ -7,7 +7,6 @@ import { useFonts } from 'expo-font'
 import * as ImagePicker from 'expo-image-picker'
 import axios from 'axios';
 import LoadingAnimation from '../LoadingAnimation';
-import { useIsFocused } from '@react-navigation/native';
 
 export default function Citizen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(true)
@@ -22,16 +21,18 @@ export default function Citizen({ route, navigation }) {
           console.log('Please accept location permissions'); Alert.alert('location is required!');
         }
         else {
-          const location = await Location.getCurrentPositionAsync({});
+          const location = await Location.getCurrentPositionAsync();
           setLocation({ latitude: location.coords.latitude, longitude: location.coords.longitude });
           setLocationStatus(true)
         }
+        setIsLoading(false)
       } catch (error) {
         console.error(error);
+        setIsLoading(false)
       }
       setIsLoading(false)
     })()
-  }, [useIsFocused]);
+  }, []);
   //end of handling location and beginning of handling camera
   const [userImage, setUserImage] = useState('')
   const [imageModal, setImageModal] = useState(false)
@@ -82,11 +83,8 @@ export default function Citizen({ route, navigation }) {
   let [fontsLoaded] = useFonts({
     'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
   });
-  if (!fontsLoaded) {
-    return <LoadingAnimation />;
-  }
   return (
-    <>{isLoading ? <LoadingAnimation /> :
+    <>{(isLoading && fontsLoaded) ? <LoadingAnimation /> :
       <View style={styles.all}>
         <>{locationStatus ? 
           <MapView
