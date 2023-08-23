@@ -17,10 +17,12 @@ export default function Received({ navigation, route }) {
                         res2.data.userData.some((e, i) => {
                             if (e.image_name === route.params.image_name) {
                                 console.log(e._id)
-                                axios.put(`https://zigwa.cleverapps.io/updateStatus?status=sent-credits&_id=${e._id}`).then(() => {
-                                    setIsLoading(false)
-                                    navigation.goBack()
-                                    Alert.alert('success!')
+                                axios.put(`https://zigwa.cleverapps.io/updateStatus?status=credits-sent!&_id=${e._id}`).then(() => {
+                                    axios.delete(`https://zigwa.cleverapps.io/wrapUp?${e.image_name}`).then(() => {
+                                        setIsLoading(false)
+                                        navigation.goBack()
+                                        Alert.alert('success!')
+                                    })
                                 })
                                 return true;
                             }

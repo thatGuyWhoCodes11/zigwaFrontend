@@ -18,7 +18,7 @@ export default function Home({ route, navigation }) {
                     setIsRequest(true)
                     setIsOrder(true)
                     res.data.userData.forEach(async (e) => {
-                        if (e.completed != 'true') {
+                        if (e.completed != 'yes') {
                             if (e.accepted != 'yes') {
                                 const res2 = await axios.get(`https://zigwa.cleverapps.io/location?image_name=${e.image_name}`)
                                 if (res2.data.errorCode == 0 && res2.data.doc.length != 0) {
@@ -40,7 +40,7 @@ export default function Home({ route, navigation }) {
                 console.log(res.data)
             }
         })()
-    }, [])
+    }, [navigation.params])
     function handleDetails(i) {
         navigation.navigate('Details', { image: images_requests[i], citizenUsername: requests[i].citizenUsername, collectorUsername: requests[i].collectorUsername, description: requests[i].description, scrapUsername: route.params.username, _id: requests[i]._id })
     }

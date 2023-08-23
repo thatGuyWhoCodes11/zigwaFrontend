@@ -9,10 +9,6 @@ import axios from 'axios';
 import LoadingAnimation from '../LoadingAnimation';
 
 export default function Citizen({ route, navigation }) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [location, setLocation] = useState({ latitude: 0, longitude: 0 })
-  const [locationStatus, setLocationStatus] = useState(false)
-  //handle location from user
   useEffect(() => {
     (async () => {
       try {
@@ -32,7 +28,11 @@ export default function Citizen({ route, navigation }) {
       }
       setIsLoading(false)
     })()
-  }, []);
+  }, [navigation.params])
+  const [isLoading, setIsLoading] = useState(true)
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 })
+  const [locationStatus, setLocationStatus] = useState(false)
+  //handle location from user
   //end of handling location and beginning of handling camera
   const [userImage, setUserImage] = useState('')
   const [imageModal, setImageModal] = useState(false)
@@ -83,10 +83,11 @@ export default function Citizen({ route, navigation }) {
   let [fontsLoaded] = useFonts({
     'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
   });
+  console.log(isLoading, !fontsLoaded)
   return (
-    <>{(isLoading && fontsLoaded) ? <LoadingAnimation /> :
+    <>{(isLoading || !fontsLoaded) ? <LoadingAnimation /> :
       <View style={styles.all}>
-        <>{locationStatus ? 
+        <>{locationStatus ?
           <MapView
             style={styles.map}
             initialRegion={{
@@ -99,7 +100,7 @@ export default function Citizen({ route, navigation }) {
             showsUserLocation={true}
             followsUserLocation={true}
           >
-          </MapView>:<Text>Location been denied</Text>}
+          </MapView> : <Text>Location been denied</Text>}
         </>
         <View>
           <View style={{ height: 1, width: 1 }}>
