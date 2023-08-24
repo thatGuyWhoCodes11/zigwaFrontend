@@ -133,11 +133,21 @@ export default function Home({ route, navigation }) {
                     })}
                 </ScrollView>
             </View>
-            <TouchableOpacity style={{ padding: 20, alignSelf: 'center', backgroundColor: '#5e17eb', width: '70%', borderRadius: 15 }} onPress={() => (navigation.navigate('History'))}>
-                <Text style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 20 }} >History</Text>
-            </TouchableOpacity>
-            <Button title='notifications' onPress={() => navigation.navigate('Notifications')} />
+
             <Text style={{ padding: 10, fontFamily: 'bebas', fontSize: 20, alignSelf: 'center' }}>Credits: {route.params.credits}</Text>
+            <View style={{padding:20}}>
+            <TouchableOpacity style={{ padding: 10, alignSelf: 'center', backgroundColor: '#5e17eb', width: '70%', borderRadius: 15 }} onPress={() => (navigation.navigate('History'))}>
+                <Text style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 18 }} >History</Text>
+            </TouchableOpacity>
+
+            </View>
+
+            <View style={{padding:20}}>
+            <TouchableOpacity style={{ padding: 10, alignSelf: 'center', backgroundColor: '#5e17eb', width: '70%', borderRadius: 15 }} onPress={() => (navigation.navigate('History'))}>
+                <Text onPress={() => navigation.navigate('Notifications')} style={{ color: 'white', alignSelf: 'center', fontFamily: 'bebas', fontSize: 18 }} >Notification</Text>
+            </TouchableOpacity>
+
+            </View>
         </View>
     )
 }

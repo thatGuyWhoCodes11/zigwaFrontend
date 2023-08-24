@@ -9,6 +9,7 @@ import CitizenDrawer from './screens/CitizenDrawer';
 import CollectorStack from './screens/CollectorStack';
 import ScrapDealerStack from './screens/ScrapDealerStack';
 import Bank from './Bank';
+import Test from './screens/Test';
 const stack = createStackNavigator()
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
         <stack.Screen name='CitizenDrawer' component={CitizenDrawer}  />
         <stack.Screen name='ScrapDealerStack' component={ScrapDealerStack} />
         <stack.Screen name='Bank' component={Bank} />
+        <stack.Screen name='Test' component={Test}/>
       </stack.Navigator>
     </NavigationContainer>
   );

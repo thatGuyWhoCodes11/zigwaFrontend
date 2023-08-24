@@ -95,6 +95,10 @@ export default function Sign_Up({ navigation }) {
       }
     }).catch((err) => { setIsLoading(false); Alert.alert(JSON.stringify(err)); console.error(err) })
   }
+
+  function testsub() {
+    navigation.navigate('Test')
+  }
   function handleBank() {
     navigation.navigate('Bank', { test: 'testuisdjkghskdh' })
   }
@@ -144,6 +148,9 @@ export default function Sign_Up({ navigation }) {
               </View>
               <View>
                 <Button title='link bank account' onPress={handleBank} />
+              </View>
+              <View>
+                <Button title='test' onPress={testsub}/>
               </View>
             </ScrollView>
           </View>
