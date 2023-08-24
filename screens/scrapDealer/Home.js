@@ -45,7 +45,10 @@ export default function Home({ route, navigation }) {
         navigation.navigate('Details', { image: images_requests[i], citizenUsername: requests[i].citizenUsername, collectorUsername: requests[i].collectorUsername, description: requests[i].description, scrapUsername: route.params.username, _id: requests[i]._id })
     }
     function handleReceived(i) {
-        navigation.navigate('Received', { image: images_orders[i], citizenUsername: orders[i].citizenUsername, collectorUsername: orders[i].collectorUsername, scrapUsername: route.params.username, _id: orders[i]._id,image_name:requests[i].image_name })
+        navigation.navigate('Received', { image: images_orders[i], citizenUsername: orders[i].citizenUsername, collectorUsername: orders[i].collectorUsername, scrapUsername: route.params.username, _id: orders[i]._id,image_name:orders[i].image_name })
+    }
+    function handleDetails2(e){
+        navigation.navigate('Details2',e)
     }
     return (
         <View>
@@ -70,7 +73,7 @@ export default function Home({ route, navigation }) {
                                 <View key={i} >
                                     <Image style={{ height: 150, width: 150 }} source={{ uri: 'data:img/png;base64,' + images_orders[i] }} />
                                     <Text>collector name: {e.collectorUsername}</Text>
-                                    <Button title="Details" />
+                                    <Button title="Details" onPress={()=>handleDetails2(e)} />
                                     <Button title="received" onPress={() => handleReceived(i)} />
                                 </View>
                             ))

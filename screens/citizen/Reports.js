@@ -1,17 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, Alert, Modal } from "react-native";
+import { View, Text, ScrollView, Alert, Modal, Image } from "react-native";
 import { Button } from "react-native";
 import LoadingAnimation from "../LoadingAnimation";
 import * as Location from 'expo-location'
 import MapView, { Marker, Polyline } from "react-native-maps";
 import { useFonts } from 'expo-font'
+import { useQuery } from "@tanstack/react-query";
+import { GetGeoLocationArray, SearchByImgNameArray, TransactionsSearchByCitizen } from "../../ApiCalls";
 
 export default function History({ navigation, route }) {
     const [users, setUsers] = useState([])
-    const [citizenGeoLocations, setCitizenGeolocations] = useState([])
-    const [collectorGeoLocations, setCollectorGeoLocations] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
     const [isEmpty, setIsEmpty] = useState(false)
     const [params, setParams] = useState({})
     const [coords, setCoords] = useState()
@@ -20,31 +19,41 @@ export default function History({ navigation, route }) {
     const [singleName, setSingleName] = useState()
     const [singleLocC, setSingleLocC] = useState()
     const [singleLocU, setSingleLocU] = useState()
+    const [citizenLocations, setCitizenLocations] = useState([])
+    const [collectorLocations, setCollectorLocations] = useState([])
 
-    useEffect(() => {
-        (async () => {
-            const res = await axios.get(`https://zigwa.cleverapps.io/transactions?citizenUsername=${route.params.params.params.username}`)
-            if (res.data.errorCode == 0) {
-                if (res.data.userData != 0) {
-                    res.data.userData.forEach(async (e) => {
-                        setUsers(prev => [...prev, e])
-                        {
-                            const resCitizen = await axios.get(`https://api.maptiler.com/geocoding/${e.citizenLocation?.longitude},${e.citizenLocation.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
-                            const { features: [{ place_name }] } = resCitizen.data
-                            setCitizenGeolocations(prev => [...prev, place_name])
-                        }
-                        const resCollector = await axios.get(`https://api.maptiler.com/geocoding/${e.collectorLocation?.longitude},${e.collectorLocation.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`)
-                        const { features: [{ place_name }] } = resCollector.data
-                        setCollectorGeoLocations(prev => [...prev, place_name])
-                    })
-                }
-                else {
-                    setIsEmpty(true)
-                }
-            } else
-                Alert.alert('something went wrong')
-        })()
-    }, [])
+    const { data: transactions, isLoading: isTransLoading } = useQuery({
+        queryKey: ['transactions', route.params.params.params.username],
+        queryFn: TransactionsSearchByCitizen,
+        staleTime: 10000
+    })
+    console.log(transactions.length != 0)
+    if (!isTransLoading) {
+        if (transactions.length != 0) {
+            setCitizenLocations(transactions.map((e) => e.citizenLocation))
+            setCollectorLocations(transactions.map((e) => e.collectorLocation))
+            setUsers(transactions)
+        }
+    }
+    const { data: images, isLoading: isImgLoading } = useQuery({
+        queryKey: ['locations', transactions],
+        queryFn: SearchByImgNameArray,
+        staleTime: 10000,
+        enabled: transactions.length != 0
+    })
+    const { data: citizenGeoLocations, isLoading: isCitizenGeoLoading } = useQuery({
+        queryKey: ['citizenGeoLocation', citizenLocations],
+        queryFn: GetGeoLocationArray,
+        staleTime: 10000,
+        enabled: transactions.length != 0
+    })
+    const { data: collectorGeoLocations, isLoading: isCollectorGeoLoading } = useQuery({
+        queryKey: ['collectorGeoLocation', collectorLocations],
+        queryFn: GetGeoLocationArray,
+        staleTime: 10000,
+        enabled: transactions.length != 0
+    })
+
     async function handleDetails(i) {
         const { status } = await Location.requestForegroundPermissionsAsync()
         if (status !== 'granted') {
@@ -73,26 +82,31 @@ export default function History({ navigation, route }) {
             })
         }
     }
+
+    if (isTransLoading)
+        return (<LoadingAnimation />)
+    if (transactions.length == 0) {
+        return (<View style={{ top: 110 }} >
+            <Text>
+                empty
+            </Text>
+        </View>)
+    }
     return (
         <>
-            {isEmpty ?
-                <Text>no requests have been made yet</Text> :
-                <View style={{ top: 110 }}>
-                    {(users[0] != 0) ?
-                        <ScrollView>
-                            {users.map((e, i) =>
-                            (<View key={i} style={{ alignItems: 'center', }} >
-                                <Text>collector name: {e.collectorUsername}</Text>
-                                <Text>his location: {collectorGeoLocations[i]}</Text>
-                                <Text>status: {e.status}</Text>
-                                {(e.status === "accepted - onGoing") ?
-                                    <Button title="details" onPress={() => handleDetails(i)} /> : <></>}
-                            </View>))}
-                        </ScrollView> : <LoadingAnimation />}
-                </View>}
-
-
-
+            <View style={{ top: 110 }}>
+                <ScrollView>
+                    {users.map((e, i) =>
+                    (<View key={i} style={{ alignItems: 'center', }} >
+                        <Image source={{ uri: 'data:img/png;base64,' + images[i] }} style={{ height: 100, width: 100 }} />
+                        <Text>collector name: {e.collectorUsername}</Text>
+                        <Text>his location: {collectorGeoLocations[i]}</Text>
+                        <Text>status: {e.status}</Text>
+                        {(e.status === "accepted - onGoing") ?
+                            <Button title="details" onPress={() => handleDetails(i)} /> : <></>}
+                    </View>))}
+                </ScrollView>
+            </View>
             <Modal visible={isVisible} >
                 <View>
                     {(coords && path) ? <MapView style={{ height: '80%', width: '100%' }} showsUserLocation initialRegion={{

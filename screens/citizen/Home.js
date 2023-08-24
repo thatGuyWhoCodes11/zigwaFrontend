@@ -7,36 +7,18 @@ import { useFonts } from 'expo-font'
 import * as ImagePicker from 'expo-image-picker'
 import axios from 'axios';
 import LoadingAnimation from '../LoadingAnimation';
+import { useQuery } from '@tanstack/react-query';
+import { GetLocation } from '../../ApiCalls'
 
 export default function Citizen({ route, navigation }) {
-  useEffect(() => {
-    (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status != 'granted') {
-          console.log('Please accept location permissions'); Alert.alert('location is required!');
-        }
-        else {
-          const location = await Location.getCurrentPositionAsync();
-          setLocation({ latitude: location.coords.latitude, longitude: location.coords.longitude });
-          setLocationStatus(true)
-        }
-        setIsLoading(false)
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false)
-      }
-      setIsLoading(false)
-    })()
-  }, [navigation.params])
-  const [isLoading, setIsLoading] = useState(true)
-  const [location, setLocation] = useState({ latitude: 0, longitude: 0 })
-  const [locationStatus, setLocationStatus] = useState(false)
-  //handle location from user
-  //end of handling location and beginning of handling camera
   const [userImage, setUserImage] = useState('')
   const [imageModal, setImageModal] = useState(false)
   const [geoLocation, setGeoLocation] = useState('')
+  const { isError, isLoading, data } = useQuery({
+    queryKey: ['location'],
+    queryFn: GetLocation,
+    staleTime: 10000
+  })
   function handleImage() {
     (async () => {
       let permissions = await ImagePicker.requestCameraPermissionsAsync()
@@ -60,7 +42,7 @@ export default function Citizen({ route, navigation }) {
     )()
   }
   function getGeoLocation() {
-    axios.get(`https://api.maptiler.com/geocoding/${location.longitude},${location.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`).then((res) => {
+    axios.get(`https://api.maptiler.com/geocoding/${data.longitude},${data.latitude}.json?key=EXraYT9hKOgDIdJtEpJn`).then((res) => {
       const { features: [{ place_name }] } = res.data
       setGeoLocation(place_name)
     }).catch((err) => { console.log(err); setImageModal(false) })
@@ -68,7 +50,7 @@ export default function Citizen({ route, navigation }) {
   function sendImage() {
     formData = new FormData()
     formData.append('image', userImage.base64)
-    formData.append('location', JSON.stringify(location))
+    formData.append('location', JSON.stringify(data))
     axios.post('https://zigwa.cleverapps.io/location', formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((res) => {
       if (res.data.errorCode == 0) {
         setImageModal(false)
@@ -83,18 +65,18 @@ export default function Citizen({ route, navigation }) {
   let [fontsLoaded] = useFonts({
     'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
   });
-  console.log(isLoading, !fontsLoaded)
+  console.log(isLoading)
   return (
     <>{(isLoading || !fontsLoaded) ? <LoadingAnimation /> :
       <View style={styles.all}>
-        <>{locationStatus ?
+        <>{!isError ?
           <MapView
             style={styles.map}
             initialRegion={{
               latitudeDelta: 0.001,
               longitudeDelta: 0.001,
-              latitude: (location.latitude),
-              longitude: (location.longitude)
+              latitude: (data.latitude),
+              longitude: (data.longitude)
             }
             }
             showsUserLocation={true}
