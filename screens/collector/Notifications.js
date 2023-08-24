@@ -18,10 +18,15 @@ export default function Notifications() {
         <ScrollView>
             {
                 notifications.map((e,i) => {
-                    return (<View key={i}>
-                        <Text>username of scrap dealer: {e.scrapUsername}</Text>
-                        <Text>their address: {e.address}</Text>
-                    </View>)
+                    return (
+                        <View style={{padding:20}}>
+                          <View key={i}>
+                          <Text>Username of scrap dealer: {e.scrapUsername}</Text>
+                          <Text>Their address: {e.address}</Text>
+                    </View>
+
+                        </View>
+)
                 })
             }
         </ScrollView>

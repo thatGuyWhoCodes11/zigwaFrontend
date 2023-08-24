@@ -85,9 +85,6 @@ export default function Citizen({ route, navigation }) {
           </MapView> : <Text>Location been denied</Text>}
         </>
         <View>
-          <View style={{ height: 1, width: 1 }}>
-            <Image style={styles.nav} source={require('../../images/navbar.png')} />
-          </View>
           <View>
             <TouchableOpacity style={{ alignSelf: 'center', elevation: 20 }} onPress={handleImage}>
               <Image style={styles.cam} source={require('../../images/3178179.png')} />

@@ -83,6 +83,11 @@ export default function History({ navigation, route }) {
         }
     }
 
+    let [fontsLoaded] = useFonts({
+        'bebas': require('../../assets/fonts/BebasNeue-Regular.ttf')
+      });
+
+
     if (isTransLoading)
         return (<LoadingAnimation />)
     if (transactions.length == 0) {
@@ -97,13 +102,15 @@ export default function History({ navigation, route }) {
             <View style={{ top: 110 }}>
                 <ScrollView>
                     {users.map((e, i) =>
-                    (<View key={i} style={{ alignItems: 'center', }} >
+                    (<View key={i} style={{ alignItems: 'center',padding:20 }} >
                         <Image source={{ uri: 'data:img/png;base64,' + images[i] }} style={{ height: 100, width: 100 }} />
-                        <Text>collector name: {e.collectorUsername}</Text>
-                        <Text>his location: {collectorGeoLocations[i]}</Text>
-                        <Text>status: {e.status}</Text>
-                        {(e.status === "accepted - onGoing") ?
-                            <Button title="details" onPress={() => handleDetails(i)} /> : <></>}
+                        <View style={{padding:20,borderWidth:1,borderRadius:15,borderColor:'#5e17eb'}}>
+                                  <Text style={{fontFamily:'bebas',fontSize:15}}>Collector name: {e.collectorUsername}</Text>
+                          <Text style={{fontFamily:'bebas',fontSize:15}}>Location: {collectorGeoLocations[i]}</Text>
+                          <Text style={{fontFamily:'bebas',fontSize:15,alignSelf:'center',padding:10}}>Status: {e.status}</Text>
+                          {(e.status === "accepted - onGoing") ?
+                              <Button title="details" onPress={() => handleDetails(i)} /> : <></>}
+                                  </View>
                     </View>))}
                 </ScrollView>
             </View>
